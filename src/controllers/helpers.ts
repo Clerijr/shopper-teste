@@ -1,12 +1,10 @@
-import { ServerError } from "./errors";
+import { InvalidDataError, ServerError } from "./errors";
 import { HttpResponse } from "./types";
 
-export function badRequest(error: Error): HttpResponse {
+export function badRequest(error: string): HttpResponse {
   return {
     statusCode: 400,
-    body: {
-      message: error,
-    },
+    body: new InvalidDataError(error),
   };
 }
 

@@ -1,8 +1,41 @@
-import { MissingParamError, OriginEqualToDestinationError, ServerError } from "../errors";
+import { MissingParamError, OriginEqualToDestinationError } from "../errors";
 import { badRequest, serverError } from "../helpers";
 import { RouteService, Controller } from "../protocols";
 import { HttpRequest, HttpResponse } from "../types";
-
+import { estimateRideResponse } from "../types";
+const fakeData = [
+    {
+      "ID": 1,
+      "NOME": "Homer Simpson",
+      "DESCRIÇÃO": "Olá! Sou o Homer, seu motorista camarada! Relaxe e aproveite o passeio, com direito a rosquinhas e boas risadas (e talvez alguns desvios).",
+      "CARRO": "Plymouth Valiant 1973 rosa e enferrujado",
+      "AVALIAÇÃO": "2/5",
+      "COMENTÁRIO": "Motorista simpático, mas errou o caminho 3 vezes. O carro cheira a donuts.",
+      "TAXA_KM": "R$ 2,50/km",
+      "KM_MÍNIMO": 1
+    },
+    {
+      "ID": 2,
+      "NOME": "Dominic Toretto",
+      "DESCRIÇÃO": "Ei, aqui é o Dom. Pode entrar, vou te levar com segurança e rapidez ao seu destino. Só não mexa no rádio, a playlist é sagrada.",
+      "CARRO": "Dodge Charger R/T 1970 modificado",
+      "AVALIAÇÃO": "4/5",
+      "COMENTÁRIO": "Que viagem incrível! O carro é um show à parte e o motorista, apesar de ter uma cara de poucos amigos, foi super gente boa. Recomendo!",
+      "TAXA_KM": "R$ 5,00/km",
+      "KM_MÍNIMO": 5
+    },
+    {
+      "ID": 3,
+      "NOME": "James Bond",
+      "DESCRIÇÃO": "Boa noite, sou James Bond. À seu dispor para um passeio suave e discreto. Aperte o cinto e aproveite a viagem.",
+      "CARRO": "Aston Martin DB5 clássico",
+      "AVALIAÇÃO": "5/5",
+      "COMENTÁRIO": "Serviço impecável! O motorista é a própria definição de classe e o carro é simplesmente magnífico. Uma experiência digna de um agente secreto.",
+      "TAXA_KM": "R$ 10,00/km",
+      "KM_MÍNIMO": 10
+    }
+  ]
+  
 
 export class RideController implements Controller {
     private readonly routeService: RouteService
@@ -16,15 +49,16 @@ export class RideController implements Controller {
             const requiredFields = [ 'origin', 'destination', 'customer_id' ]
         for(const field of requiredFields) {
             if (!req.body[field]) {
-                return new Promise(resolve => resolve(badRequest(new MissingParamError(field))))
+                return new Promise(resolve => resolve(badRequest(`Missing Param: ${field}`)))
             }
         }
+        const { origin, destination } = req.body
 
-        if(req.body.origin === req.body.destination) {
-            return new Promise(resolve => resolve(badRequest(new OriginEqualToDestinationError())))
+        if(origin === destination) {
+            return new Promise(resolve => resolve(badRequest("Origin can not be equal to Destination")))
         }
 
-        await this.routeService.calculateDistance(req.body.origin, req.body.destination)
+        await this.routeService.getDriversByDistance(origin, destination)
         } catch(error) {
             return serverError()
         }

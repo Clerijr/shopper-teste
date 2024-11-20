@@ -1,7 +1,7 @@
 import { HttpRequest, HttpResponse } from "./types";
 
 export interface RouteService {
-    calculateDistance(origin: string, destination: string): Promise<number>
+    getDriversByDistance(origin: string, destination: string): Promise<number>
 }
 
 export interface Controller {

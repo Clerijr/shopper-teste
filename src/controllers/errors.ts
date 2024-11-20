@@ -18,3 +18,10 @@ export class ServerError extends Error {
         this.name = "Server Error"
     }
 }
+
+export class InvalidDataError extends Error {
+    constructor(description: string){
+        super(description)
+        this.name = "INVALID_DATA"    
+    }
+}
