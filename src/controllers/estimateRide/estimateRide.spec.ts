@@ -5,6 +5,7 @@ import {
   ServerError,
 } from "../errors";
 import { RouteService } from "../protocols";
+import { badRequest } from "../helpers";
 
 type SutType = {
   sut: RideController;
@@ -39,7 +40,7 @@ describe("Ride Controller", () => {
       },
     });
     expect(httpResponse.statusCode).toBe(400);
-    expect(httpResponse.body.message).toEqual("Missing Param: origin");
+    expect(httpResponse).toEqual(badRequest("Missing Param: origin"));
   });
 
   test("Should return 400 if destination is not provided", async () => {
@@ -51,8 +52,8 @@ describe("Ride Controller", () => {
       },
     });
     expect(httpResponse.statusCode).toBe(400);
-    expect(httpResponse.body.message).toEqual(
-      "Missing Param: destination"
+    expect(httpResponse).toEqual(
+      badRequest("Missing Param: destination")
     );
   });
 
@@ -65,8 +66,8 @@ describe("Ride Controller", () => {
       },
     });
     expect(httpResponse.statusCode).toBe(400);
-    expect(httpResponse.body.message).toEqual(
-      "Missing Param: customer_id"
+    expect(httpResponse).toEqual(
+      badRequest("Missing Param: customer_id")
     );
   });
 
@@ -80,8 +81,8 @@ describe("Ride Controller", () => {
       },
     });
     expect(httpResponse.statusCode).toBe(400);
-    expect(httpResponse.body.message).toEqual(
-      "Missing Param: customer_id"
+    expect(httpResponse).toEqual(
+      badRequest("Missing Param: customer_id")
     );
   });
 
@@ -95,8 +96,8 @@ describe("Ride Controller", () => {
       },
     });
     expect(httpResponse.statusCode).toBe(400);
-    expect(httpResponse.body.message).toEqual(
-      "Origin can not be equal to Destination"
+    expect(httpResponse).toEqual(
+      badRequest("Origin can not be equal to Destination")
     );
   });
 

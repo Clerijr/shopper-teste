@@ -1,4 +1,4 @@
-import { MissingParamError, OriginEqualToDestinationError } from "../errors";
+import { InvalidDataError, MissingParamError, OriginEqualToDestinationError } from "../errors";
 import { badRequest, serverError } from "../helpers";
 import { RouteService, Controller } from "../protocols";
 import { HttpRequest, HttpResponse } from "../types";

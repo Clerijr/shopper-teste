@@ -1,10 +1,15 @@
 import { InvalidDataError, ServerError } from "./errors";
 import { HttpResponse } from "./types";
 
-export function badRequest(error: string): HttpResponse {
+export function badRequest(description: string): HttpResponse {
+  const error = new InvalidDataError(description);
+
   return {
     statusCode: 400,
-    body: new InvalidDataError(error),
+    body: {
+      error_code: error.name,
+      error_description: error.message,
+    },
   };
 }
 
