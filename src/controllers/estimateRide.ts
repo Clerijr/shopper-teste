@@ -3,29 +3,16 @@ import { HttpRequest, HttpResponse } from "./types";
 
 export class RideController {
     async handle(req: HttpRequest): Promise<HttpResponse> {
-        if(!req.body.origin) {
-            return new Promise(resolve => resolve({
-                statusCode: 400,
-                body: {
-                    message: new MissingParamError('origin')
-                }
-            }))
-        }
-        if(!req.body.destination) {
-            return new Promise(resolve => resolve({
-                statusCode: 400,
-                body: {
-                    message: new MissingParamError('destination')
-                }
-            }))
-        }
-        if(!req.body.customer_id) {
-            return new Promise(resolve => resolve({
-                statusCode: 400,
-                body: {
-                    message: new MissingParamError('customer_id')
-                }
-            }))
+        const requiredFields = [ 'origin', 'destination', 'customer_id' ]
+        for(const field of requiredFields) {
+            if (!req.body[field]) {
+                return new Promise(resolve => resolve({
+                    statusCode: 400,
+                    body: {
+                        message: new MissingParamError(field)
+                    }
+                }))
+            }
         }
     }
 }
