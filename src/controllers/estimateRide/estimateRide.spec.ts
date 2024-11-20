@@ -1,5 +1,5 @@
 import { RideController } from "./estimateRide";
-import { MissingParamError, OriginEqualToDestinationError } from "./errors";
+import { MissingParamError, OriginEqualToDestinationError } from "../errors";
 
 describe("Ride Controller", () => {
   test("Should return 400 if origin is not provided", async () => {
@@ -36,6 +36,20 @@ test("Should return 400 if customer_id is not provided", async () => {
     });
     expect(httpResponse.statusCode).toBe(400);
     expect(httpResponse.body.message).toEqual(new MissingParamError('customer_id'))
+});
+
+
+test("Should return 400 if customer_id is empty", async () => {
+  const sut = new RideController();
+  const httpResponse = await sut.handle({
+    body: {
+      origin: "any_origin",
+      customer_id: "",
+      destination: "any_destination",
+    },
+  });
+  expect(httpResponse.statusCode).toBe(400);
+  expect(httpResponse.body.message).toEqual(new MissingParamError('customer_id'))
 });
 
 test("Should return 400 if destination is equal to origin", async () => {
