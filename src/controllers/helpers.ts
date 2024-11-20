@@ -19,3 +19,10 @@ export function serverError(): HttpResponse {
     body: new ServerError(),
   };
 }
+
+export function ok(payload: any): HttpResponse {
+  return {
+    statusCode: 200,
+    body: payload
+  }
+}

@@ -30,6 +30,7 @@ const makeSut = (): SutType => {
   };
 };
 
+
 describe("Ride Controller", () => {
   test("Should return 400 if origin is not provided", async () => {
     const { sut } = makeSut();
@@ -52,9 +53,7 @@ describe("Ride Controller", () => {
       },
     });
     expect(httpResponse.statusCode).toBe(400);
-    expect(httpResponse).toEqual(
-      badRequest("Missing Param: destination")
-    );
+    expect(httpResponse).toEqual(badRequest("Missing Param: destination"));
   });
 
   test("Should return 400 if customer_id is not provided", async () => {
@@ -66,9 +65,7 @@ describe("Ride Controller", () => {
       },
     });
     expect(httpResponse.statusCode).toBe(400);
-    expect(httpResponse).toEqual(
-      badRequest("Missing Param: customer_id")
-    );
+    expect(httpResponse).toEqual(badRequest("Missing Param: customer_id"));
   });
 
   test("Should return 400 if customer_id is empty", async () => {
@@ -81,9 +78,7 @@ describe("Ride Controller", () => {
       },
     });
     expect(httpResponse.statusCode).toBe(400);
-    expect(httpResponse).toEqual(
-      badRequest("Missing Param: customer_id")
-    );
+    expect(httpResponse).toEqual(badRequest("Missing Param: customer_id"));
   });
 
   test("Should return 400 if destination is equal to origin", async () => {
@@ -117,5 +112,22 @@ describe("Ride Controller", () => {
     });
     expect(httpResponse.statusCode).toBe(500);
     expect(httpResponse.body).toEqual(new ServerError());
+  });
+
+  test("Should return 200 if correct data is provided", async () => {
+    const { sut, routeService } = makeSut();
+    const getDriversByDistanceSpy = jest.spyOn(
+      routeService,
+      "getDriversByDistance"
+    );
+    const httpResponse = await sut.handle({
+      body: {
+        customer_id: "any_id",
+        origin: "any_origin",
+        destination: "any_destination",
+      },
+    });
+    expect(getDriversByDistanceSpy).toHaveBeenCalledWith("any_origin", "any_destination")
+    expect(httpResponse.statusCode).toBe(200);
   });
 });
