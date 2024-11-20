@@ -1,4 +1,4 @@
-import { MissingParamError } from "./errors";
+import { MissingParamError, OriginEqualToDestinationError } from "./errors";
 import { HttpRequest, HttpResponse } from "./types";
 
 export class RideController {
@@ -13,6 +13,15 @@ export class RideController {
                     }
                 }))
             }
+        }
+
+        if(req.body.origin === req.body.destination) {
+            return new Promise(resolve => resolve({
+                statusCode: 400,
+                body: {
+                    message: new OriginEqualToDestinationError()
+                }
+            }))
         }
     }
 }
