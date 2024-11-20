@@ -1,3 +1,4 @@
+import { MissingParamError } from "./errors";
 import { HttpRequest, HttpResponse } from "./types";
 
 export class RideController {
@@ -5,16 +6,25 @@ export class RideController {
         if(!req.body.origin) {
             return new Promise(resolve => resolve({
                 statusCode: 400,
+                body: {
+                    message: new MissingParamError('origin')
+                }
             }))
         }
         if(!req.body.destination) {
             return new Promise(resolve => resolve({
                 statusCode: 400,
+                body: {
+                    message: new MissingParamError('destination')
+                }
             }))
         }
         if(!req.body.customer_id) {
             return new Promise(resolve => resolve({
                 statusCode: 400,
+                body: {
+                    message: new MissingParamError('customer_id')
+                }
             }))
         }
     }

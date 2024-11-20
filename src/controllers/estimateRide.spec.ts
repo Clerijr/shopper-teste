@@ -1,4 +1,5 @@
 import { RideController } from "./estimateRide";
+import { MissingParamError } from "./errors";
 
 describe("Ride Controller", () => {
   test("Should return 400 if origin is not provided", async () => {
@@ -10,6 +11,7 @@ describe("Ride Controller", () => {
       },
     });
     expect(httpResponse.statusCode).toBe(400);
+    expect(httpResponse.body.message).toEqual(new MissingParamError('origin'))
   });
   
   test("Should return 400 if destination is not provided", async () => {
@@ -21,7 +23,8 @@ describe("Ride Controller", () => {
       },
     });
     expect(httpResponse.statusCode).toBe(400);
-  });
+    expect(httpResponse.body.message).toEqual(new MissingParamError('destination'))
+});
 
   test("Should return 400 if customer_id is not provided", async () => {
     const sut = new RideController();
@@ -32,5 +35,6 @@ describe("Ride Controller", () => {
       },
     });
     expect(httpResponse.statusCode).toBe(400);
-  });
+    expect(httpResponse.body.message).toEqual(new MissingParamError('customer_id'))
+});
 });
