@@ -11,3 +11,10 @@ export class OriginEqualToDestinationError extends Error {
         this.name = "Origin equal to Destination"    
     }
 }
+
+export class ServerError extends Error {
+    constructor() {
+        super("Internal Server Error")
+        this.name = "Server Error"
+    }
+}

@@ -1,3 +1,4 @@
+import { ServerError } from "./errors";
 import { HttpResponse } from "./types";
 
 export function badRequest(error: Error): HttpResponse {
@@ -6,5 +7,12 @@ export function badRequest(error: Error): HttpResponse {
     body: {
       message: error,
     },
+  };
+}
+
+export function serverError(): HttpResponse {
+  return {
+    statusCode: 500,
+    body: new ServerError(),
   };
 }
