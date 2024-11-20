@@ -1,0 +1,17 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "Shopper backend application",
+  "main": "server.ts",
+  "scripts": {
+    "test": "jest --watch"
+  },
+  "author": "Clerivaldo Junior",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/jest": "^29.5.14",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.2.5",
+    "ts-node": "^10.9.2"
+  }
+}
