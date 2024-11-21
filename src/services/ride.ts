@@ -1,4 +1,4 @@
-import { DriverService, Driver } from "../protocols";
+import { RideService, AvailableRide } from "../protocols";
 
 const fakeData = [
     {
@@ -36,14 +36,14 @@ const fakeData = [
     }
   ]
   
-export class DriverServiceImpl implements DriverService {
+export class RideServiceImpl implements RideService {
   async insert(payload: any): Promise<void> {
     return null;
   }
-  async getDriversByDistance(
+  async getAvailableRidesByDistance(
     origin: string,
     destination: string
-  ): Promise<Array<Driver>> {
+  ): Promise<Array<AvailableRide>> {
     return new Promise((resolve) => resolve(fakeData));
   }
 }

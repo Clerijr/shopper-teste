@@ -1,9 +1,9 @@
-import { Driver } from "./types";
+import { AvailableRide } from "./types";
 
 export interface Service {
   insert(payload: any): void;
 }
 
-export interface DriverService extends Service {
-  getDriversByDistance(origin: string, destination: string): Promise<Array<Driver>>;
+export interface RideService extends Service {
+  getAvailableRidesByDistance(origin: string, destination: string): Promise<Array<AvailableRide>>;
 }

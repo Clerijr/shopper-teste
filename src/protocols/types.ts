@@ -7,7 +7,7 @@ export type HttpRequest = {
   body?: any;
 };
 
-export type Driver = {
+export type AvailableRide = {
   id: number;
   name: string;
   description: string;
@@ -30,6 +30,6 @@ export type estimateRideResponse = {
   };
   distance: number;
   duration: string;
-  options: Array<Driver>;
+  options: Array<AvailableRide>;
   routeResponse: any;
 };

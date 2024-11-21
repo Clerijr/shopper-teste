@@ -1,13 +1,13 @@
-import { DriverService, Controller, HttpRequest, HttpResponse } from "../../protocols/index";
+import { RideService, Controller, HttpRequest, HttpResponse } from "../../protocols/index";
 import { badRequest, serverError, ok } from "../helpers";
 import { estimateRideResponse } from "../../protocols/types";
 
 
 export class RideController implements Controller {
-  private readonly driverService: DriverService;
+  private readonly rideService: RideService;
 
-  constructor(driverService: DriverService) {
-    this.driverService = driverService;
+  constructor(rideService: RideService) {
+    this.rideService = rideService;
   }
 
   async handle(req: HttpRequest): Promise<HttpResponse> {
@@ -28,7 +28,7 @@ export class RideController implements Controller {
         );
       }
 
-      const payload = await this.driverService.getDriversByDistance(
+      const payload = await this.rideService.getAvailableRidesByDistance(
         origin,
         destination
       );
