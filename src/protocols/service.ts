@@ -1,4 +1,4 @@
-import { AvailableRide } from "./types";
+import { AvailableRide, Coordinates, GoogleRouteResponse } from "./types";
 
 export interface Service {
   insert(payload: any): void;

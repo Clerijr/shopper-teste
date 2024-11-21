@@ -1,4 +1,4 @@
-import { RideService, AvailableRide } from "../protocols";
+import { RideService, AvailableRide, GeolocationAdapter } from "../protocols";
 
 const fakeData = [
     {
@@ -37,6 +37,12 @@ const fakeData = [
   ]
   
 export class RideServiceImpl implements RideService {
+  private readonly geolocationAdapter: GeolocationAdapter
+
+  constructor(geolocationAdapter: GeolocationAdapter) {
+    this.geolocationAdapter = geolocationAdapter
+  }
+
   async insert(payload: any): Promise<void> {
     return null;
   }
@@ -44,6 +50,17 @@ export class RideServiceImpl implements RideService {
     origin: string,
     destination: string
   ): Promise<Array<AvailableRide>> {
+
+  const originCoordinate = await this.geolocationAdapter.getCoordinatesFromAddress(origin)
+  //const destinationCoordinate = await this.geolocationAdapter.getCoordinatesFromAddress(destination)
+  /* 
+  - Do geolocation to get lat long 
+  - with lat long get distance this.geolocation.getRouteFromCoordinates
+  - with distance get drivers this.driverRepository.getDriversByDistance
+  - return payload
+  */
+
+
     return new Promise((resolve) => resolve(fakeData));
   }
 }

@@ -96,7 +96,7 @@ describe("Ride Controller", () => {
     );
   });
 
-  test("Should return 500 if driverService throws", async () => {
+  test("Should return 500 if rideService throws", async () => {
     const { sut, rideService } = makeSut();
     jest
       .spyOn(rideService, "getAvailableRidesByDistance")

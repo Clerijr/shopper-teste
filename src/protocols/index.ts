@@ -1,3 +1,4 @@
-export * from "../protocols/controller"
-export * from "../protocols/service"
-export * from "../protocols/types"
+export * from "./controller"
+export * from "./service"
+export * from "./types"
+export * from "./adapter"

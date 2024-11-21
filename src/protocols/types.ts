@@ -33,3 +33,11 @@ export type estimateRideResponse = {
   options: Array<AvailableRide>;
   routeResponse: any;
 };
+
+export type Coordinates = {
+  latitude: string;
+  longitude: string;
+};
+export type GoogleRouteResponse = {
+  route: any;
+};
