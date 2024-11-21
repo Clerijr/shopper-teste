@@ -1,4 +1,4 @@
-import { RouteService, Driver } from "../protocols";
+import { DriverService, Driver } from "../protocols";
 
 const fakeData = [
     {
@@ -36,8 +36,7 @@ const fakeData = [
     }
   ]
   
-
-export class RouteServiceImpl implements RouteService {
+export class DriverServiceImpl implements DriverService {
   async insert(payload: any): Promise<void> {
     return null;
   }

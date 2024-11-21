@@ -2,16 +2,16 @@ import { RideController } from "./estimateRide";
 import {
   ServerError,
 } from "../errors";
-import { RouteService, Driver } from "../../protocols";
+import { DriverService, Driver } from "../../protocols";
 import { badRequest } from "../helpers";
 
 type SutType = {
   sut: RideController;
-  routeService: RouteService;
+  driverService: DriverService;
 };
 
 const makeSut = (): SutType => {
-  class RouteServiceStub implements RouteService {
+  class DriverServiceStub implements DriverService {
     async insert(): Promise<void> {}
 
     async getDriversByDistance(
@@ -21,12 +21,12 @@ const makeSut = (): SutType => {
       return new Promise((resolve) => resolve([]));
     }
   }
-  const routeService = new RouteServiceStub();
-  const sut = new RideController(routeService);
+  const driverService = new DriverServiceStub();
+  const sut = new RideController(driverService);
 
   return {
     sut,
-    routeService,
+    driverService,
   };
 };
 
@@ -96,10 +96,10 @@ describe("Ride Controller", () => {
     );
   });
 
-  test("Should return 500 if routeService throws", async () => {
-    const { sut, routeService } = makeSut();
+  test("Should return 500 if driverService throws", async () => {
+    const { sut, driverService } = makeSut();
     jest
-      .spyOn(routeService, "getDriversByDistance")
+      .spyOn(driverService, "getDriversByDistance")
       .mockImplementationOnce(async () => {
         return new Promise((resolve, reject) => reject(new Error()));
       });
@@ -115,9 +115,9 @@ describe("Ride Controller", () => {
   });
 
   test("Should return 200 if correct data is provided", async () => {
-    const { sut, routeService } = makeSut();
+    const { sut, driverService } = makeSut();
     const getDriversByDistanceSpy = jest.spyOn(
-      routeService,
+      driverService,
       "getDriversByDistance"
     );
     const httpResponse = await sut.handle({
