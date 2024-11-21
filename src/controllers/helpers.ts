@@ -1,5 +1,5 @@
 import { InvalidDataError, ServerError } from "./errors";
-import { HttpResponse } from "./types";
+import { HttpResponse } from "../protocols/types";
 
 export function badRequest(description: string): HttpResponse {
   const error = new InvalidDataError(description);

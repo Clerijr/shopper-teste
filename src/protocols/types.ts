@@ -7,7 +7,7 @@ export type HttpRequest = {
   body?: any;
 };
 
-type Driver = {
+export type Driver = {
   id: number;
   name: string;
   description: string;

@@ -1,10 +1,8 @@
 import { RideController } from "./estimateRide";
 import {
-  MissingParamError,
-  OriginEqualToDestinationError,
   ServerError,
 } from "../errors";
-import { RouteService } from "../protocols";
+import { RouteService, Driver } from "../../protocols";
 import { badRequest } from "../helpers";
 
 type SutType = {
@@ -14,11 +12,13 @@ type SutType = {
 
 const makeSut = (): SutType => {
   class RouteServiceStub implements RouteService {
+    async insert(): Promise<void> {}
+
     async getDriversByDistance(
       origin: string,
       destination: string
-    ): Promise<number> {
-      return new Promise((resolve) => resolve(10000));
+    ): Promise<Array<Driver>> {
+      return new Promise((resolve) => resolve([]));
     }
   }
   const routeService = new RouteServiceStub();
@@ -129,5 +129,6 @@ describe("Ride Controller", () => {
     });
     expect(getDriversByDistanceSpy).toHaveBeenCalledWith("any_origin", "any_destination")
     expect(httpResponse.statusCode).toBe(200);
+    expect(httpResponse.body).toBeTruthy();
   });
 });

@@ -1,7 +1,6 @@
+import { RouteService, Controller, HttpRequest, HttpResponse } from "../../protocols/index";
 import { badRequest, serverError, ok } from "../helpers";
-import { RouteService, Controller } from "../protocols";
-import { HttpRequest, HttpResponse } from "../types";
-import { estimateRideResponse } from "../types";
+import { estimateRideResponse } from "../../protocols/types";
 const fakeData = [
   {
     ID: 1,
@@ -66,8 +65,11 @@ export class RideController implements Controller {
         );
       }
 
-      const payload = await this.routeService.getDriversByDistance(origin, destination);
-      return ok(payload)
+      const payload = await this.routeService.getDriversByDistance(
+        origin,
+        destination
+      );
+      return ok(payload);
     } catch (error) {
       return serverError();
     }
