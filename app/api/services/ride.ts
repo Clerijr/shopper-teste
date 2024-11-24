@@ -38,7 +38,8 @@ export class RideServiceImpl implements RideService {
         destination: route.legs[0].endLocation,
         distance: route.distanceMeters,
         duration: route.legs[0].duration,
-        options: drivers
+        options: drivers,
+        routeResponse: route
       };
 
       return new Promise((resolve) => resolve(payload));

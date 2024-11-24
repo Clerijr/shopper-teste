@@ -30,6 +30,27 @@ const makeSut = (): SutType => {
 };
 
 describe("Ride Controller", () => {
+  test("Should return 200 if correct data is provided", async () => {
+    const { sut, rideService } = makeSut();
+    const getDriversByDistanceSpy = jest.spyOn(
+      rideService,
+      "getAvailableRidesByDistance"
+    );
+    const httpResponse = await sut.handle({
+      body: {
+        customer_id: "any_id",
+        origin: "any_origin",
+        destination: "any_destination",
+      },
+    });
+    expect(getDriversByDistanceSpy).toHaveBeenCalledWith(
+      "any_origin",
+      "any_destination"
+    );
+    expect(httpResponse.statusCode).toBe(200);
+    expect(httpResponse.body).toBeTruthy();
+  });
+
   test("Should return 400 if origin is not provided", async () => {
     const { sut } = makeSut();
     const httpResponse = await sut.handle({
@@ -110,26 +131,5 @@ describe("Ride Controller", () => {
     });
     expect(httpResponse.statusCode).toBe(500);
     expect(httpResponse.body).toEqual(new ServerError());
-  });
-
-  test("Should return 200 if correct data is provided", async () => {
-    const { sut, rideService } = makeSut();
-    const getDriversByDistanceSpy = jest.spyOn(
-      rideService,
-      "getAvailableRidesByDistance"
-    );
-    const httpResponse = await sut.handle({
-      body: {
-        customer_id: "any_id",
-        origin: "any_origin",
-        destination: "any_destination",
-      },
-    });
-    expect(getDriversByDistanceSpy).toHaveBeenCalledWith(
-      "any_origin",
-      "any_destination"
-    );
-    expect(httpResponse.statusCode).toBe(200);
-    expect(httpResponse.body).toBeTruthy();
   });
 });
