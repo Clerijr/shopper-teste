@@ -7,7 +7,7 @@ export type HttpRequest = {
   body?: any;
 };
 
-export type AvailableRide = {
+export type Driver = {
   id: number;
   name: string;
   description: string;
@@ -19,25 +19,31 @@ export type AvailableRide = {
   value: number;
 };
 
-export type estimateRideResponse = {
-  origin: {
-    latitude: number;
-    longitude: number;
-  };
-  destination: {
-    latitude: number;
-    longitude: number;
-  };
+export type AvailableRideDetails = {
+  origin: Coordinates;
+  destination: Coordinates;
   distance: number;
   duration: string;
-  options: Array<AvailableRide>;
+  options: Array<Driver>
+};
+
+export type EstimateRideResponse = {
+  origin: Coordinates;
+  destination: Coordinates;
+  distance: number;
+  duration: string;
+  options: Array<AvailableRideDetails>;
   routeResponse: any;
 };
 
 export type Coordinates = {
-  latitude: string;
-  longitude: string;
+  latitude: number;
+  longitude: number;
 };
+
 export type GoogleRouteResponse = {
-  route: any;
+  distanceMeters: number,
+  duration: string,
+  legs: Array<any>,
+  polyline?: any
 };

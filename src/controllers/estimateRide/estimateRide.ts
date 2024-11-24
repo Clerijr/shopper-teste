@@ -1,7 +1,10 @@
-import { RideService, Controller, HttpRequest, HttpResponse } from "../../protocols/index";
+import {
+  RideService,
+  Controller,
+  HttpRequest,
+  HttpResponse,
+} from "../../protocols/index";
 import { badRequest, serverError, ok } from "../helpers";
-import { estimateRideResponse } from "../../protocols/types";
-
 
 export class RideController implements Controller {
   private readonly rideService: RideService;

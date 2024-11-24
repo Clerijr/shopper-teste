@@ -1,9 +1,8 @@
 import { RideController } from "./estimateRide";
-import {
-  ServerError,
-} from "../errors";
-import { RideService, AvailableRide } from "../../protocols";
+import { ServerError } from "../errors";
+import { RideService, AvailableRideDetails } from "../../protocols";
 import { badRequest } from "../helpers";
+import { makeAvailableRidesByDistance } from "../../factories/mocks";
 
 type SutType = {
   sut: RideController;
@@ -17,8 +16,8 @@ const makeSut = (): SutType => {
     async getAvailableRidesByDistance(
       origin: string,
       destination: string
-    ): Promise<Array<AvailableRide>> {
-      return new Promise((resolve) => resolve([]));
+    ): Promise<AvailableRideDetails> {
+      return makeAvailableRidesByDistance();
     }
   }
   const rideService = new RideServiceStub();
@@ -29,7 +28,6 @@ const makeSut = (): SutType => {
     rideService,
   };
 };
-
 
 describe("Ride Controller", () => {
   test("Should return 400 if origin is not provided", async () => {
@@ -127,7 +125,10 @@ describe("Ride Controller", () => {
         destination: "any_destination",
       },
     });
-    expect(getDriversByDistanceSpy).toHaveBeenCalledWith("any_origin", "any_destination")
+    expect(getDriversByDistanceSpy).toHaveBeenCalledWith(
+      "any_origin",
+      "any_destination"
+    );
     expect(httpResponse.statusCode).toBe(200);
     expect(httpResponse.body).toBeTruthy();
   });
