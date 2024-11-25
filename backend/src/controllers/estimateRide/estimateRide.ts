@@ -13,14 +13,20 @@ export class RideController implements Controller {
     this.rideService = rideService;
   }
 
+  private validateFields = (fields: Array<string>, req: HttpRequest) => {
+    for (const field of fields) {
+      if (!req.body[field]) {
+        return badRequest(`Missing Param: ${field}`)
+      }
+    }
+  }
+
   async estimate(req: HttpRequest): Promise<HttpResponse> {
     try {
       const requiredFields = ["origin", "destination", "customer_id"];
-      for (const field of requiredFields) {
-        if (!req.body[field]) {
-          return badRequest(`Missing Param: ${field}`)
-        }
-      }
+      const error = this.validateFields(requiredFields, req)
+      if(error) return error
+
       const { origin, destination } = req.body;
 
       if (origin === destination) {
@@ -38,6 +44,9 @@ export class RideController implements Controller {
   }
 
   async confirm(req: HttpRequest): Promise<HttpResponse> {
-    return badRequest(`Missing Param: origin`)
+    const requiredFields = ["origin", "destination", "customer_id", "driver"];
+    const error = this.validateFields(requiredFields, req)
+      if(error) return error
+    return null
   }
 }

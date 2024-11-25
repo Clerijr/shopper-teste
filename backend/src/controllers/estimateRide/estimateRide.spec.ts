@@ -166,4 +166,22 @@ describe("Ride Controller /confirm", () => {
     });
     expect(httpResponse).toEqual(badRequest("Missing Param: origin"));
   });
+
+  test("Should return 400 if destination is empty", async () => {
+    const { sut } = makeSut();
+    const httpResponse = await sut.confirm({
+      body: {
+        customer_id: "any_id",
+        origin: "any_origin",
+        distance: 1000,
+        duration: "any_duration",
+        driver: {
+          id: 1,
+          name: "any_name",
+        },
+        value: 10,
+      },
+    });
+    expect(httpResponse).toEqual(badRequest("Missing Param: destination"));
+  });
 });
