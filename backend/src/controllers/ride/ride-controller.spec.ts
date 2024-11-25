@@ -1,5 +1,5 @@
 import { RideController } from "./ride-controller";
-import { DriverNotFoundError, InvalidDataError, ServerError } from "../errors";
+import { DriverNotFoundError, InvalidDataError, InvalidDistanceError, ServerError } from "../errors";
 import {
   RideService,
   DriverService,
@@ -270,5 +270,25 @@ describe("Ride Controller /confirm", () => {
       },
     });
     expect(httpResponse).toEqual(badRequest(new DriverNotFoundError()));
+  });
+
+  test("Should return 406 if distance is invalid for provided driver", async () => {
+    const { sut, driverService } = makeSut();
+    jest.spyOn(driverService, "validateDriver").mockResolvedValueOnce(new InvalidDistanceError())
+    const httpResponse = await sut.confirm({
+      body: {
+        customer_id: "any_id",
+        origin: "any_origin",
+        destination: "any_destination",
+        distance: 1000,
+        duration: "any_duration",
+        driver: {
+          id: 1,
+          name: "any_name",
+        },
+        value: 10,
+      },
+    });
+    expect(httpResponse).toEqual(badRequest(new InvalidDistanceError()));
   });
 });
