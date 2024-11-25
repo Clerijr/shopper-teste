@@ -1,4 +1,4 @@
-import { DriverNotFoundError, InvalidDistanceError } from "../controllers/errors";
+import { DriverNotFoundError, InvalidDistanceError } from "../errors";
 import { DriverService, DriverRepository, Driver } from "../protocols";
 
 export class DriverServiceImpl implements DriverService {

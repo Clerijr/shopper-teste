@@ -3,8 +3,7 @@ import {
   RideService,
   AvailableRideDetails,
   GeolocationStrategy,
-  Driver,
-  ConfirmRideRequest,
+  Ride,
   Repository,
 } from "../protocols";
 
@@ -49,7 +48,7 @@ export class RideServiceImpl implements RideService {
     }
   }
 
-  async confirmRide(ride: ConfirmRideRequest): Promise<void> {
+  async confirmRide(ride: Ride): Promise<void> {
     await this.rideRepository.insert(ride)
   }
 }

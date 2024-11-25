@@ -1,4 +1,4 @@
-import { Repository, Driver } from "../protocols";
+import { Repository, Driver } from "../../protocols";
 
 const fakeDrivers = [
   {

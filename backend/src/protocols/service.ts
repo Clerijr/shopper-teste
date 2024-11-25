@@ -1,6 +1,6 @@
 import {
   AvailableRideDetails,
-  ConfirmRideRequest,
+  Ride,
   Driver,
   RouteResponse,
 } from "./types";
@@ -12,7 +12,7 @@ export interface RideService extends Service {
     origin: string,
     destination: string
   ): Promise<AvailableRideDetails>;
-  confirmRide(ride: ConfirmRideRequest): Promise<void>;
+  confirmRide(ride: Ride): Promise<void>;
 }
 
 export interface DriverService extends Service {

@@ -10,7 +10,7 @@ import {
   HttpRequest,
   RideService,
   DriverService,
-  ConfirmRideRequest
+  Ride
 } from "../protocols";
 
 export const makePromiseWithServerError = (): Promise<never> => {
@@ -164,7 +164,7 @@ export const makeRideServiceStub = (): RideService => {
     ): Promise<AvailableRideDetails> {
       return makeAvailableRidesByDistance();
     }
-    async confirmRide(ride: ConfirmRideRequest): Promise<void> {
+    async confirmRide(ride: Ride): Promise<void> {
     }
   }
   return new RideServiceStub();

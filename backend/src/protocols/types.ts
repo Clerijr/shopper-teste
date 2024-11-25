@@ -50,7 +50,7 @@ export type RouteResponse = {
   polyline?: any;
 };
 
-export type ConfirmRideRequest = {
+export type Ride = {
   customer_id: string;
   origin: string;
   destination: string;
@@ -62,3 +62,4 @@ export type ConfirmRideRequest = {
   };
   value: number;
 };
+
