@@ -1,15 +1,11 @@
-import { RideController } from "./ride-controller";
-import { DriverNotFoundError, InvalidDataError, InvalidDistanceError, ServerError } from "../errors";
 import {
   RideService,
-  DriverService,
-  AvailableRideDetails,
-  HttpRequest,
-  Driver,
-  ConfirmRideRequest
+  DriverService
 } from "../../protocols";
 import { badRequest } from "../helpers";
-import { makeAvailableRidesByDistance } from "../../factories/mocks";
+import { RideController } from "./ride-controller";
+import { DriverNotFoundError, InvalidDataError, InvalidDistanceError, ServerError } from "../errors";
+import { makeEstimateRequest, makeConfirmRequest, makeRideServiceStub, makeDriverServiceStub } from "../../factories/mocks";
 
 type SutType = {
   sut: RideController;
@@ -17,53 +13,7 @@ type SutType = {
   driverService: DriverService
 };
 
-const makeEstimateRequest = (): HttpRequest => ({
-  body: {
-    customer_id: "any_id",
-    origin: "any_origin",
-    destination: "any_destination",
-  },
-});
 
-const makeConfirmRequest = (): HttpRequest => ({
-  body: {
-    customer_id: "any_id",
-    origin: "any_origin",
-    destination: "any_destination",
-    distance: 1000,
-    duration: "any_duration",
-    driver: {
-      id: 1,
-      name: "any_name",
-    },
-    value: 10,
-  },
-});
-
-const makeRideServiceStub = (): RideService => {
-  class RideServiceStub implements RideService {
-    async getAvailableRidesByDistance(
-      origin: string,
-      destination: string
-    ): Promise<AvailableRideDetails> {
-      return makeAvailableRidesByDistance();
-    }
-    async confirmRide(ride: ConfirmRideRequest): Promise<void> {
-      return
-    }
-  }
-  return new RideServiceStub();
-
-};
-
-const makeDriverServiceStub = (): DriverService => {
-  class DriverServiceStub implements DriverService {
-    async validateDriver(driver: Driver): Promise<Error> {
-      return
-    }
-  }
-  return new DriverServiceStub();
-};
 
 const makeSut = (): SutType => {
   const rideService = makeRideServiceStub();
