@@ -1,27 +1,27 @@
 import {
   RideService,
-  GeolocationService,
+  GeolocationStrategy,
   Repository,
   DriverRepository
 } from "../protocols";
 import { RideServiceImpl } from "./ride-service";
-import { makeDriverRepositoryStub, makeRideRepositoryStub, makeGeolocationServiceStub } from "../factories/mocks";
+import { makeDriverRepositoryStub, makeRideRepositoryStub, makeGeolocationStrategyStub } from "../factories/mocks";
 
 type SutTypes = {
   sut: RideService;
-  geolocationServiceStub: GeolocationService;
+  geolocationStrategyStub: GeolocationStrategy;
   driverRepositoryStub: DriverRepository
   rideRepositoryStub: Repository
 };
 
 const makeSut = (): SutTypes => {
-  const geolocationServiceStub = makeGeolocationServiceStub();
+  const geolocationStrategyStub = makeGeolocationStrategyStub();
   const driverRepositoryStub = makeDriverRepositoryStub()
   const rideRepositoryStub = makeRideRepositoryStub()
-  const sut = new RideServiceImpl(geolocationServiceStub, driverRepositoryStub, rideRepositoryStub);
+  const sut = new RideServiceImpl(geolocationStrategyStub, driverRepositoryStub, rideRepositoryStub);
   return {
     sut,
-    geolocationServiceStub,
+    geolocationStrategyStub,
     driverRepositoryStub,
     rideRepositoryStub
   };
@@ -38,9 +38,9 @@ describe("Ride Service", () => {
   });
 
    test("getCoordinatesFromAddress should be called with correct data", async () => {
-    const { sut, geolocationServiceStub } = makeSut();
+    const { sut, geolocationStrategyStub } = makeSut();
     const getCoordinatesFromAddressSpy = jest.spyOn(
-      geolocationServiceStub,
+      geolocationStrategyStub,
       "getRoute"
     )
     await sut.getAvailableRidesByDistance(

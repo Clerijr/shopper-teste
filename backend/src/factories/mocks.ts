@@ -1,10 +1,10 @@
-import { ServerError } from "../controllers/errors";
+import { ServerError } from "../errors";
 import {
   AvailableRideDetails,
   Repository,
   DriverRepository,
-  GeolocationService,
-  GoogleRouteResponse,
+  GeolocationStrategy,
+  RouteResponse,
   Coordinates,
   Driver,
   HttpRequest,
@@ -93,12 +93,12 @@ export const makeDriverRepositoryStub = (): DriverRepository => {
   return new DriverRepositoryStub();
 };
 
-export const makeGeolocationServiceStub = (): GeolocationService => {
-  class GeolocationServiceStub implements GeolocationService {
+export const makeGeolocationStrategyStub = (): GeolocationStrategy => {
+  class GeolocationStrategyStub implements GeolocationStrategy {
     async getRoute(
       origin: string,
       destination: string
-    ): Promise<GoogleRouteResponse> {
+    ): Promise<RouteResponse> {
       return new Promise((resolve) =>
         resolve({
           distanceMeters: 432500,
@@ -129,11 +129,11 @@ export const makeGeolocationServiceStub = (): GeolocationService => {
     async getRouteFromCoordinates(
       origin: Coordinates,
       destination: Coordinates
-    ): Promise<GoogleRouteResponse> {
+    ): Promise<RouteResponse> {
       return;
     }
   }
-  return new GeolocationServiceStub();
+  return new GeolocationStrategyStub();
 };
 
 export const makeEstimateRequest = (): HttpRequest => ({

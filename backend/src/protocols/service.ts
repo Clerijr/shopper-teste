@@ -1,9 +1,8 @@
 import {
   AvailableRideDetails,
   ConfirmRideRequest,
-  Coordinates,
   Driver,
-  GoogleRouteResponse,
+  RouteResponse,
 } from "./types";
 
 export interface Service {}
@@ -19,6 +18,6 @@ export interface RideService extends Service {
 export interface DriverService extends Service {
   validateDriver(driver: Driver, distance: number): Promise<Error>;
 }
-export interface GeolocationService {
-  getRoute(origin: string, destination: string): Promise<GoogleRouteResponse>;
+export interface GeolocationStrategy {
+  getRoute(origin: string, destination: string): Promise<RouteResponse>;
 }

@@ -2,23 +2,23 @@ import {
   DriverRepository,
   RideService,
   AvailableRideDetails,
-  GeolocationService,
+  GeolocationStrategy,
   Driver,
   ConfirmRideRequest,
   Repository,
 } from "../protocols";
 
 export class RideServiceImpl implements RideService {
-  private readonly geolocationService: GeolocationService;
+  private readonly geolocationStrategy: GeolocationStrategy;
   private readonly driverRepository: DriverRepository;
   private readonly rideRepository: Repository;
 
   constructor(
-    geolocationService: GeolocationService,
+    geolocationStrategy: GeolocationStrategy,
     driverRepository: DriverRepository,
     rideRepository: Repository
   ) {
-    this.geolocationService = geolocationService;
+    this.geolocationStrategy = geolocationStrategy;
     this.driverRepository = driverRepository;
     this.rideRepository = rideRepository
   }
@@ -28,7 +28,7 @@ export class RideServiceImpl implements RideService {
     destination: string
   ): Promise<AvailableRideDetails> {
     try {
-      const route = await this.geolocationService.getRoute(origin, destination);
+      const route = await this.geolocationStrategy.getRoute(origin, destination);
 
       const drivers = await this.driverRepository.getDriversByDistance(
         route.distanceMeters

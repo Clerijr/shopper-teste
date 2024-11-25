@@ -39,3 +39,17 @@ export class InvalidDistanceError extends Error {
         this.name = "INVALID_DISTANCE"    
     }
 }
+
+export class InvalidAddressForGeocodingError extends Error {
+    constructor(address: string){
+        super(`Geocoding não retornou dados para o endereço: ${address}`)
+        this.name = "COORDINATE_NOT_FOUND"    
+    }
+}
+
+export class NoRoutesFoundError extends Error {
+    constructor(){
+        super("Não foi encontrada uma rota para as coordenadas informadas")
+        this.name = "ROUTE_NOT_FOUND"
+    }
+}

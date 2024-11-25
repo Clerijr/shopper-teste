@@ -4,7 +4,7 @@ import {
 } from "../../protocols";
 import { badRequest } from "../helpers";
 import { RideController } from "./ride-controller";
-import { DriverNotFoundError, InvalidDataError, InvalidDistanceError, ServerError } from "../errors";
+import { DriverNotFoundError, InvalidDataError, InvalidDistanceError, ServerError } from "../../errors";
 import { makeEstimateRequest, makeConfirmRequest, makeRideServiceStub, makeDriverServiceStub } from "../../factories/mocks";
 
 type SutType = {

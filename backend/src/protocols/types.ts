@@ -26,7 +26,7 @@ export type AvailableRideDetails = {
   distance: number;
   duration: string;
   options: Array<Driver>;
-  routeResponse: GoogleRouteResponse;
+  routeResponse: RouteResponse;
 };
 
 export type EstimateRideResponse = {
@@ -43,7 +43,7 @@ export type Coordinates = {
   longitude: number;
 };
 
-export type GoogleRouteResponse = {
+export type RouteResponse = {
   distanceMeters: number;
   duration: string;
   legs: Array<any>;
