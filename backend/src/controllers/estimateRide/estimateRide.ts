@@ -16,26 +16,25 @@ export class RideController implements Controller {
   private validateFields = (fields: Array<string>, req: HttpRequest) => {
     for (const field of fields) {
       if (!req.body[field]) {
-        return badRequest(`Missing Param: ${field}`)
+        return badRequest(`Missing Param: ${field}`);
       }
     }
-  }
+
+    if (req.body.origin === req.body.destination) {
+      return badRequest("Origin can not be equal to Destination");
+    }
+  };
 
   async estimate(req: HttpRequest): Promise<HttpResponse> {
     try {
+    
       const requiredFields = ["origin", "destination", "customer_id"];
-      const error = this.validateFields(requiredFields, req)
-      if(error) return error
-
-      const { origin, destination } = req.body;
-
-      if (origin === destination) {
-        return badRequest("Origin can not be equal to Destination")
-      }
+      const error = this.validateFields(requiredFields, req);
+      if (error) return error;
 
       const payload = await this.rideService.getAvailableRidesByDistance(
-        origin,
-        destination
+        req.body.origin,
+        req.body.destination
       );
       return ok(payload);
     } catch (error) {
@@ -45,8 +44,8 @@ export class RideController implements Controller {
 
   async confirm(req: HttpRequest): Promise<HttpResponse> {
     const requiredFields = ["origin", "destination", "customer_id", "driver"];
-    const error = this.validateFields(requiredFields, req)
-      if(error) return error
-    return null
+    const error = this.validateFields(requiredFields, req);
+    if (error) return error;
+    return null;
   }
 }
