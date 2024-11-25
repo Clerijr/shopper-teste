@@ -4,6 +4,7 @@ import {
   HttpRequest,
   HttpResponse,
 } from "../../protocols/index";
+import { DriverNotFoundError, InvalidDataError } from "../errors";
 import { badRequest, serverError, ok } from "../helpers";
 
 export class RideController implements Controller {
@@ -13,15 +14,15 @@ export class RideController implements Controller {
     this.rideService = rideService;
   }
 
-  private validateFields = (fields: Array<string>, req: HttpRequest) => {
+  private validateFields = (fields: Array<string>, req: HttpRequest): HttpResponse => {
     for (const field of fields) {
       if (!req.body[field]) {
-        return badRequest(`Missing Param: ${field}`);
+        return badRequest(new InvalidDataError());
       }
     }
 
     if (req.body.origin === req.body.destination) {
-      return badRequest("Origin can not be equal to Destination");
+      return badRequest(new InvalidDataError());
     }
   };
 
@@ -46,6 +47,12 @@ export class RideController implements Controller {
     const requiredFields = ["origin", "destination", "customer_id", "driver"];
     const error = this.validateFields(requiredFields, req);
     if (error) return error;
+
+    if(!req.body.driver.id || !req.body.driver.name) {
+      return badRequest(new DriverNotFoundError())
+    }
+
+
     return null;
   }
 }

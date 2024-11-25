@@ -1,5 +1,5 @@
 import { RideController } from "./estimateRide";
-import { ServerError } from "../errors";
+import { InvalidDataError, ServerError } from "../errors";
 import {
   RideService,
   AvailableRideDetails,
@@ -84,7 +84,7 @@ describe("Ride Controller /estimate", () => {
         destination: "any_destination",
       },
     });
-    expect(httpResponse).toEqual(badRequest("Missing Param: origin"));
+    expect(httpResponse).toEqual(badRequest(new InvalidDataError()));
   });
 
   test("Should return 400 if destination is not provided", async () => {
@@ -95,7 +95,7 @@ describe("Ride Controller /estimate", () => {
         origin: "any_origin",
       },
     });
-    expect(httpResponse).toEqual(badRequest("Missing Param: destination"));
+    expect(httpResponse).toEqual(badRequest(new InvalidDataError()));
   });
 
   test("Should return 400 if customer_id is not provided", async () => {
@@ -106,7 +106,7 @@ describe("Ride Controller /estimate", () => {
         destination: "any_destination",
       },
     });
-    expect(httpResponse).toEqual(badRequest("Missing Param: customer_id"));
+    expect(httpResponse).toEqual(badRequest(new InvalidDataError()));
   });
 
   test("Should return 400 if customer_id is empty", async () => {
@@ -118,7 +118,7 @@ describe("Ride Controller /estimate", () => {
         destination: "any_destination",
       },
     });
-    expect(httpResponse).toEqual(badRequest("Missing Param: customer_id"));
+    expect(httpResponse).toEqual(badRequest(new InvalidDataError()));
   });
 
   test("Should return 400 if destination is equal to origin", async () => {
@@ -131,7 +131,7 @@ describe("Ride Controller /estimate", () => {
       },
     });
     expect(httpResponse).toEqual(
-      badRequest("Origin can not be equal to Destination")
+      badRequest(new InvalidDataError())
     );
   });
 
@@ -164,7 +164,7 @@ describe("Ride Controller /confirm", () => {
         value: 10,
       },
     });
-    expect(httpResponse).toEqual(badRequest("Missing Param: origin"));
+    expect(httpResponse).toEqual(badRequest(new InvalidDataError()));
   });
 
   test("Should return 400 if destination is empty", async () => {
@@ -182,7 +182,7 @@ describe("Ride Controller /confirm", () => {
         value: 10,
       },
     });
-    expect(httpResponse).toEqual(badRequest("Missing Param: destination"));
+    expect(httpResponse).toEqual(badRequest(new InvalidDataError()));
   });
 
   test("Should return 400 if customer_id is empty", async () => {
@@ -200,7 +200,7 @@ describe("Ride Controller /confirm", () => {
         value: 10,
       },
     });
-    expect(httpResponse).toEqual(badRequest("Missing Param: customer_id"));
+    expect(httpResponse).toEqual(badRequest(new InvalidDataError()));
   });
 
   test("Should return 400 if driver is empty", async () => {
@@ -215,7 +215,7 @@ describe("Ride Controller /confirm", () => {
         value: 10,
       },
     });
-    expect(httpResponse).toEqual(badRequest("Missing Param: driver"));
+    expect(httpResponse).toEqual(badRequest(new InvalidDataError()));
   });
 
   test("Should return 400 if destination is equal to origin", async () => {
@@ -235,7 +235,7 @@ describe("Ride Controller /confirm", () => {
       },
     });
     expect(httpResponse).toEqual(
-      badRequest("Origin can not be equal to Destination")
+      badRequest(new InvalidDataError())
     );
   });
 });
