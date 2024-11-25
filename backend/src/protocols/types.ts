@@ -8,7 +8,7 @@ export type HttpRequest = {
 };
 
 export type Driver = {
-  id: string;
+  id: number;
   name: string;
   description: string;
   vehicle: string;
@@ -25,7 +25,8 @@ export type AvailableRideDetails = {
   destination: Coordinates;
   distance: number;
   duration: string;
-  options: Array<Driver>
+  options: Array<Driver>;
+  routeResponse: GoogleRouteResponse;
 };
 
 export type EstimateRideResponse = {
@@ -43,8 +44,21 @@ export type Coordinates = {
 };
 
 export type GoogleRouteResponse = {
-  distanceMeters: number,
-  duration: string,
-  legs: Array<any>,
-  polyline?: any
+  distanceMeters: number;
+  duration: string;
+  legs: Array<any>;
+  polyline?: any;
+};
+
+export type ConfirmRideRequest = {
+  customer_id: string;
+  origin: string;
+  destination: string;
+  duration: string;
+  distance: number;
+  driver: {
+    id: number;
+    name: string;
+  };
+  value: number;
 };

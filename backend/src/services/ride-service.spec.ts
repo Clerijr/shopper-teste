@@ -6,12 +6,14 @@ import {
   Repository,
   Driver
 } from "../protocols";
+import { DriverRepository } from "../repositories/driver-repository";
 import { RideServiceImpl } from "./ride-service";
 
 type SutTypes = {
   sut: RideService;
   geolocationServiceStub: GeolocationService;
-  driverRepositoryStub: Repository
+  driverRepositoryStub: DriverRepository
+  rideRepositoryStub: Repository
 };
 
 const fakeRoute = {
@@ -43,7 +45,13 @@ const fakeRoute = {
   ]
 }
 
+
 const makeSut = (): SutTypes => {
+  class RideRepositoryStub implements Repository {
+    async insert(payload: any): Promise<void> {
+      return
+    }
+  }
   class DriverRepositoryStub implements Repository {
     async insert(payload: any): Promise<void>{
       return
@@ -51,9 +59,9 @@ const makeSut = (): SutTypes => {
     async getDriversByDistance(distance: number): Promise<Array<Driver>>{
       return new Promise(resolve => resolve([]))
     }
-    async findDriverById(id: string): Promise<Driver> {
+    async findDriverById(id: number): Promise<Driver> {
       return new Promise(resolve => resolve({
-        id: "1",
+        id: 1,
         name: "Homer Simpson",
         description:
           "Olá! Sou o Homer, seu motorista camarada! Relaxe e aproveite o passeio, com direito a rosquinhas e boas risadas (e talvez alguns desvios).",
@@ -85,11 +93,13 @@ const makeSut = (): SutTypes => {
 
   const geolocationServiceStub = new GeolocationServiceStub();
   const driverRepositoryStub = new DriverRepositoryStub()
-  const sut = new RideServiceImpl(geolocationServiceStub, driverRepositoryStub);
+  const rideRepositoryStub = new RideRepositoryStub()
+  const sut = new RideServiceImpl(geolocationServiceStub, driverRepositoryStub, rideRepositoryStub);
   return {
     sut,
     geolocationServiceStub,
-    driverRepositoryStub
+    driverRepositoryStub,
+    rideRepositoryStub
   };
 };
 

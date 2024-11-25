@@ -4,23 +4,25 @@ import {
   AvailableRideDetails,
   GeolocationService,
   Driver,
+  ConfirmRideRequest,
+  Repository,
 } from "../protocols";
 
 export class RideServiceImpl implements RideService {
   private readonly geolocationService: GeolocationService;
   private readonly driverRepository: DriverRepository;
+  private readonly rideRepository: Repository;
 
   constructor(
     geolocationService: GeolocationService,
-    driverRepository: DriverRepository
+    driverRepository: DriverRepository,
+    rideRepository: Repository
   ) {
     this.geolocationService = geolocationService;
     this.driverRepository = driverRepository;
+    this.rideRepository = rideRepository
   }
 
-  async insert(payload: any): Promise<void> {
-    return null;
-  }
   async getAvailableRidesByDistance(
     origin: string,
     destination: string
@@ -45,5 +47,9 @@ export class RideServiceImpl implements RideService {
     } catch (error) {
       throw new Error(error);
     }
+  }
+
+  async confirmRide(ride: ConfirmRideRequest): Promise<void> {
+    await this.rideRepository.insert(ride)
   }
 }

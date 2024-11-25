@@ -57,6 +57,10 @@ export class RideController implements Controller {
       return badRequest(driverError)
     }
 
-    return null;
+    await this.rideService.confirmRide(req.body)
+
+    return ok({
+      success: true
+    });
   }
 }

@@ -5,7 +5,8 @@ import {
   DriverService,
   AvailableRideDetails,
   HttpRequest,
-  Driver
+  Driver,
+  ConfirmRideRequest
 } from "../../protocols";
 import { badRequest } from "../helpers";
 import { makeAvailableRidesByDistance } from "../../factories/mocks";
@@ -47,9 +48,8 @@ const makeRideServiceStub = (): RideService => {
     ): Promise<AvailableRideDetails> {
       return makeAvailableRidesByDistance();
     }
-
-    async validateDriver(driver: Driver): Promise<boolean> {
-      return true
+    async confirmRide(ride: ConfirmRideRequest): Promise<void> {
+      return
     }
   }
   return new RideServiceStub();
@@ -79,6 +79,15 @@ const makeSut = (): SutType => {
 
 describe("Ride Controller /estimate", () => {
   test("Should return 200 if correct data is provided", async () => {
+    const { sut } = makeSut();
+    const httpResponse = await sut.estimate(makeEstimateRequest());
+    expect(httpResponse.statusCode).toBe(200);
+    expect(httpResponse.body).toHaveProperty("origin");
+    expect(httpResponse.body).toHaveProperty("destination");
+    expect(httpResponse.body).toHaveProperty("routeResponse");
+  });
+
+  test("Should call getAvailableRidesByDistance with correct data", async () => {
     const { sut, rideService } = makeSut();
     const getDriversByDistanceSpy = jest.spyOn(
       rideService,
@@ -164,6 +173,13 @@ describe("Ride Controller /estimate", () => {
 });
 
 describe("Ride Controller /confirm", () => {
+  test('Should return 200 if correct data is provided', async () => { 
+    const { sut }  = makeSut()
+    const httpResponse = await sut.confirm(makeConfirmRequest())
+    expect(httpResponse.statusCode).toBe(200);
+    expect(httpResponse.body).toHaveProperty("success");
+   })
+
   test("Should return 400 if origin is empty", async () => {
     const { sut } = makeSut();
     const httpResponse = await sut.confirm({
@@ -255,40 +271,14 @@ describe("Ride Controller /confirm", () => {
   test("Should return 404 if driver is not found", async () => {
     const { sut, driverService } = makeSut();
     jest.spyOn(driverService, "validateDriver").mockResolvedValueOnce(new DriverNotFoundError())
-    const httpResponse = await sut.confirm({
-      body: {
-        customer_id: "any_id",
-        origin: "any_origin",
-        destination: "any_destination",
-        distance: 1000,
-        duration: "any_duration",
-        driver: {
-          id: 1,
-          name: "any_name",
-        },
-        value: 10,
-      },
-    });
+    const httpResponse = await sut.confirm(makeConfirmRequest());
     expect(httpResponse).toEqual(badRequest(new DriverNotFoundError()));
   });
 
   test("Should return 406 if distance is invalid for provided driver", async () => {
     const { sut, driverService } = makeSut();
     jest.spyOn(driverService, "validateDriver").mockResolvedValueOnce(new InvalidDistanceError())
-    const httpResponse = await sut.confirm({
-      body: {
-        customer_id: "any_id",
-        origin: "any_origin",
-        destination: "any_destination",
-        distance: 1000,
-        duration: "any_duration",
-        driver: {
-          id: 1,
-          name: "any_name",
-        },
-        value: 10,
-      },
-    });
+    const httpResponse = await sut.confirm(makeConfirmRequest());
     expect(httpResponse).toEqual(badRequest(new InvalidDistanceError()));
   });
 });
