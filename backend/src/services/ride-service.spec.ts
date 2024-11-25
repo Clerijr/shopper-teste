@@ -6,7 +6,7 @@ import {
   Repository,
   Driver
 } from "../protocols";
-import { RideServiceImpl } from "./ride";
+import { RideServiceImpl } from "./ride-service";
 
 type SutTypes = {
   sut: RideService;

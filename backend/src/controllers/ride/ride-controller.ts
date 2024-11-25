@@ -51,10 +51,10 @@ export class RideController implements Controller {
     const error = this.validateFields(requiredFields, req);
     if (error) return error;
 
-    const driver = await this.driverService.validateDriver(req.body.driver, req.body.distance)
+    const driverError = await this.driverService.validateDriver(req.body.driver, req.body.distance)
 
-    if(!driver) {
-      return badRequest(new DriverNotFoundError())
+    if(driverError) {
+      return badRequest(driverError)
     }
 
     return null;

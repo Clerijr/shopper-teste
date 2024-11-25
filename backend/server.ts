@@ -1,10 +1,10 @@
 import express from "express";
 import { Router, Request, Response } from "express";
-import { RideController } from "./src/controllers/estimateRide/estimateRide";
-import { RideServiceImpl } from "./src/services/ride";
-import { DriverRepository } from "./src/repositories/driver";
-import { GeolocationServiceImp } from "./src/services/geolocation";
-import { DriverServiceImpl } from "./src/services/driver";
+import { RideController } from "./src/controllers/ride/ride-controller";
+import { RideServiceImpl } from "./src/services/ride-service";
+import { DriverRepository } from "./src/repositories/driver-repository";
+import { GeolocationServiceImp } from "./src/services/geolocation-service";
+import { DriverServiceImpl } from "./src/services/driver-service";
 
 
 

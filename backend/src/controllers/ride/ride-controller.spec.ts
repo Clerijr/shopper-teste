@@ -1,4 +1,4 @@
-import { RideController } from "./estimateRide";
+import { RideController } from "./ride-controller";
 import { DriverNotFoundError, InvalidDataError, ServerError } from "../errors";
 import {
   RideService,
@@ -58,8 +58,8 @@ const makeRideServiceStub = (): RideService => {
 
 const makeDriverServiceStub = (): DriverService => {
   class DriverServiceStub implements DriverService {
-    async validateDriver(driver: Driver): Promise<boolean> {
-      return true
+    async validateDriver(driver: Driver): Promise<Error> {
+      return
     }
   }
   return new DriverServiceStub();
@@ -252,9 +252,9 @@ describe("Ride Controller /confirm", () => {
     expect(httpResponse).toEqual(badRequest(new InvalidDataError()));
   });
 
-  test("Should return 404 if driver data is invalid", async () => {
+  test("Should return 404 if driver is not found", async () => {
     const { sut, driverService } = makeSut();
-    jest.spyOn(driverService, "validateDriver").mockResolvedValueOnce(false)
+    jest.spyOn(driverService, "validateDriver").mockResolvedValueOnce(new DriverNotFoundError())
     const httpResponse = await sut.confirm({
       body: {
         customer_id: "any_id",

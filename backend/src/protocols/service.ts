@@ -7,7 +7,7 @@ export interface RideService extends Service {
 }
 
 export interface DriverService extends Service {
-  validateDriver(driver: Driver, distance: number): Promise<boolean>;
+  validateDriver(driver: Driver, distance: number): Promise<Error>;
 }
 export interface GeolocationService {
   getRoute(origin: string, destination: string): Promise<GoogleRouteResponse>;

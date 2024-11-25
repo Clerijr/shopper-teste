@@ -1,3 +1,4 @@
+import { DriverNotFoundError, InvalidDistanceError } from "../controllers/errors";
 import { DriverService, DriverRepository, Driver } from "../protocols";
 
 export class DriverServiceImpl implements DriverService {
@@ -7,18 +8,18 @@ export class DriverServiceImpl implements DriverService {
     this.driverRepository = driverRepository;
   }
 
-  async validateDriver(driver: Driver, distance: number): Promise<boolean> {
+  async validateDriver(driver: Driver, distance: number): Promise<Error> {
     const driverData = await this.driverRepository.findDriverById(driver.id);
     const distanceKm = distance / 1000;
 
     if (!driverData) {
-      return false;
+      return new DriverNotFoundError();
     }
 
     if (distanceKm < driverData.minimum_distance) {
-      return false;
+      return new InvalidDistanceError();
     }
 
-    return true;
+    return
   }
 }
