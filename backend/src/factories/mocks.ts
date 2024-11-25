@@ -55,9 +55,7 @@ export const makeAvailableRidesByDistance = (): Promise<AvailableRideDetails> =>
 
 export const makeRideRepositoryStub = (): Repository => {
   class RideRepositoryStub implements Repository {
-    async insert(payload: any): Promise<void> {
-      return;
-    }
+    async insert(payload: any): Promise<void> {}
   }
 
   return new RideRepositoryStub();
@@ -66,7 +64,6 @@ export const makeRideRepositoryStub = (): Repository => {
 export const makeDriverRepositoryStub = (): DriverRepository => {
   class DriverRepositoryStub implements DriverRepository {
     async insert(payload: any): Promise<void> {
-      return;
     }
     async getDriversByDistance(distance: number): Promise<Array<Driver>> {
       return new Promise((resolve) => resolve([]));
@@ -168,7 +165,6 @@ export const makeRideServiceStub = (): RideService => {
       return makeAvailableRidesByDistance();
     }
     async confirmRide(ride: ConfirmRideRequest): Promise<void> {
-      return
     }
   }
   return new RideServiceStub();

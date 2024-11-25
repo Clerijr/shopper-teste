@@ -47,7 +47,6 @@ const fakeDrivers = [
 
 export class DriverRepository implements Repository {
   async insert(payload: any): Promise<void> {
-    return null;
   }
 
   async getDriversByDistance(distance: number): Promise<Array<Driver>> {
