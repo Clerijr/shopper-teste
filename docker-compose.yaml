@@ -1,0 +1,15 @@
+services:
+  backend:
+    build:
+      dockerfile: ./backend/Dockerfile
+    ports:
+      - "8080:8080"
+    env_file:
+      - ./backend/.env
+    command: npm run start
+  frontend:
+    build:
+      context: .
+      dockerfile: ./frontend/Dockerfile
+    ports:
+      - "8181:8181"

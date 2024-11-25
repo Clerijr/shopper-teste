@@ -45,8 +45,8 @@ const fakeRoute = {
 
 const makeSut = (): SutTypes => {
   class DriverRepositoryStub implements Repository {
-    async insert(payload: any): Promise<void> {
-      return null
+    async insert(payload: any): Promise<void>{
+      return
     }
     async getDriversByDistance(distance: number): Promise<Array<Driver>>{
       return new Promise(resolve => resolve([]))
@@ -63,7 +63,7 @@ const makeSut = (): SutTypes => {
       origin: Coordinates,
       destination: Coordinates
     ): Promise<GoogleRouteResponse> {
-      return null;
+      return
     }
   }
 
