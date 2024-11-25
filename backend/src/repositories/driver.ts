@@ -2,7 +2,7 @@ import { Repository, Driver } from "../protocols";
 
 const fakeDrivers = [
   {
-    id: 1,
+    id: "1",
     name: "Homer Simpson",
     description:
       "Olá! Sou o Homer, seu motorista camarada! Relaxe e aproveite o passeio, com direito a rosquinhas e boas risadas (e talvez alguns desvios).",
@@ -16,7 +16,7 @@ const fakeDrivers = [
     minimum_distance: 1,
   },
   {
-    id: 2,
+    id: "2",
     name: "Dominic Toretto",
     description:
       "Ei, aqui é o Dom. Pode entrar, vou te levar com segurança e rapidez ao seu destino. Só não mexa no rádio, a playlist é sagrada.",
@@ -30,7 +30,7 @@ const fakeDrivers = [
     minimum_distance: 5,
   },
   {
-    id: 3,
+    id: "3",
     name: "James Bond",
     description:
       "Boa noite, sou James Bond. À seu dispor para um passeio suave e discreto. Aperte o cinto e aproveite a viagem.",
@@ -66,8 +66,11 @@ export class DriverRepository implements Repository {
       return arr;
     }, []);
 
-    driver_payload.sort((a, b) => a.value - b.value)
+    driver_payload.sort((a, b) => a.value - b.value);
 
     return new Promise((resolve) => resolve(driver_payload));
+  }
+  async findDriverById(id: string): Promise<Driver> {
+    return fakeDrivers.find(driver => driver.id === id)
   }
 }

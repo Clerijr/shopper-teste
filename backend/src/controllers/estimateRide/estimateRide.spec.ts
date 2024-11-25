@@ -1,9 +1,10 @@
 import { RideController } from "./estimateRide";
-import { InvalidDataError, ServerError } from "../errors";
+import { DriverNotFoundError, InvalidDataError, ServerError } from "../errors";
 import {
   RideService,
   AvailableRideDetails,
   HttpRequest,
+  Driver
 } from "../../protocols";
 import { badRequest } from "../helpers";
 import { makeAvailableRidesByDistance } from "../../factories/mocks";
@@ -45,6 +46,10 @@ const makeRideServiceStub = (): RideService => {
       destination: string
     ): Promise<AvailableRideDetails> {
       return makeAvailableRidesByDistance();
+    }
+
+    async validateDriver(driver: Driver): Promise<boolean> {
+      return true
     }
   }
   return new RideServiceStub();
@@ -130,9 +135,7 @@ describe("Ride Controller /estimate", () => {
         destination: "same_address",
       },
     });
-    expect(httpResponse).toEqual(
-      badRequest(new InvalidDataError())
-    );
+    expect(httpResponse).toEqual(badRequest(new InvalidDataError()));
   });
 
   test("Should return 500 if rideService throws", async () => {
@@ -234,8 +237,26 @@ describe("Ride Controller /confirm", () => {
         value: 10,
       },
     });
-    expect(httpResponse).toEqual(
-      badRequest(new InvalidDataError())
-    );
+    expect(httpResponse).toEqual(badRequest(new InvalidDataError()));
+  });
+
+  test("Should return 404 if driver data is invalid", async () => {
+    const { sut, rideService } = makeSut();
+    jest.spyOn(rideService, "validateDriver").mockResolvedValueOnce(false)
+    const httpResponse = await sut.confirm({
+      body: {
+        customer_id: "any_id",
+        origin: "any_origin",
+        destination: "any_destination",
+        distance: 1000,
+        duration: "any_duration",
+        driver: {
+          id: 1,
+          name: "any_name",
+        },
+        value: 10,
+      },
+    });
+    expect(httpResponse).toEqual(badRequest(new DriverNotFoundError()));
   });
 });

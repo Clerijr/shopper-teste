@@ -1,4 +1,4 @@
-import { AvailableRideDetails, Coordinates, GoogleRouteResponse } from "./types";
+import { AvailableRideDetails, Coordinates, Driver, GoogleRouteResponse } from "./types";
 
 export interface Service {
   insert(payload: any): void;
@@ -6,6 +6,7 @@ export interface Service {
 
 export interface RideService extends Service {
   getAvailableRidesByDistance(origin: string, destination: string): Promise<AvailableRideDetails>;
+  validateDriver(driver: Driver): Promise<boolean>;
 }
 
 

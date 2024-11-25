@@ -3,6 +3,7 @@ import {
   RideService,
   AvailableRideDetails,
   GeolocationService,
+  Driver,
 } from "../protocols";
 
 export class RideServiceImpl implements RideService {
@@ -25,13 +26,11 @@ export class RideServiceImpl implements RideService {
     destination: string
   ): Promise<AvailableRideDetails> {
     try {
+      const route = await this.geolocationService.getRoute(origin, destination);
 
-      const route = await this.geolocationService.getRoute(
-        origin,
-        destination
+      const drivers = await this.driverRepository.getDriversByDistance(
+        route.distanceMeters
       );
-
-      const drivers = await this.driverRepository.getDriversByDistance(route.distanceMeters);
 
       const payload = {
         origin: route.legs[0].startLocation,
@@ -39,12 +38,21 @@ export class RideServiceImpl implements RideService {
         distance: route.distanceMeters,
         duration: route.legs[0].duration,
         options: drivers,
-        routeResponse: route
+        routeResponse: route,
       };
 
       return new Promise((resolve) => resolve(payload));
     } catch (error) {
       throw new Error(error);
     }
+  }
+  async validateDriver(driver: Driver): Promise<boolean> {
+    const driverExists = this.driverRepository.findDriverById(driver.id);
+
+    if (!driverExists) {
+      return false
+    }
+
+    return true;
   }
 }

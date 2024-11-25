@@ -8,7 +8,7 @@ export type HttpRequest = {
 };
 
 export type Driver = {
-  id: number;
+  id: string;
   name: string;
   description: string;
   vehicle: string;
@@ -17,6 +17,7 @@ export type Driver = {
     comment: string;
   };
   value: number;
+  minimum_distance: number;
 };
 
 export type AvailableRideDetails = {

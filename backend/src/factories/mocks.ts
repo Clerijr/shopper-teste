@@ -19,7 +19,7 @@ export const makeAvailableRidesByDistance = (): Promise<AvailableRideDetails> =>
         duration: "any_duration",
         options: [
             {
-                id: 1,
+                id: "1",
                 name: "any_name",
                 description:
                   "any_description",
@@ -30,6 +30,7 @@ export const makeAvailableRidesByDistance = (): Promise<AvailableRideDetails> =>
                     "any_comment",
                 },
                 value: 1.5,
+                minimum_distance: 1
               },
         ]
     }))
