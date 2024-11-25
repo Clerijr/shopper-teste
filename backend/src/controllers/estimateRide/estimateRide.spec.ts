@@ -2,6 +2,7 @@ import { RideController } from "./estimateRide";
 import { DriverNotFoundError, InvalidDataError, ServerError } from "../errors";
 import {
   RideService,
+  DriverService,
   AvailableRideDetails,
   HttpRequest,
   Driver
@@ -12,6 +13,7 @@ import { makeAvailableRidesByDistance } from "../../factories/mocks";
 type SutType = {
   sut: RideController;
   rideService: RideService;
+  driverService: DriverService
 };
 
 const makeEstimateRequest = (): HttpRequest => ({
@@ -39,8 +41,6 @@ const makeConfirmRequest = (): HttpRequest => ({
 
 const makeRideServiceStub = (): RideService => {
   class RideServiceStub implements RideService {
-    async insert(): Promise<void> {}
-
     async getAvailableRidesByDistance(
       origin: string,
       destination: string
@@ -53,15 +53,27 @@ const makeRideServiceStub = (): RideService => {
     }
   }
   return new RideServiceStub();
+
+};
+
+const makeDriverServiceStub = (): DriverService => {
+  class DriverServiceStub implements DriverService {
+    async validateDriver(driver: Driver): Promise<boolean> {
+      return true
+    }
+  }
+  return new DriverServiceStub();
 };
 
 const makeSut = (): SutType => {
   const rideService = makeRideServiceStub();
-  const sut = new RideController(rideService);
+  const driverService = makeDriverServiceStub()
+  const sut = new RideController(rideService, driverService);
 
   return {
     sut,
     rideService,
+    driverService
   };
 };
 
@@ -241,8 +253,8 @@ describe("Ride Controller /confirm", () => {
   });
 
   test("Should return 404 if driver data is invalid", async () => {
-    const { sut, rideService } = makeSut();
-    jest.spyOn(rideService, "validateDriver").mockResolvedValueOnce(false)
+    const { sut, driverService } = makeSut();
+    jest.spyOn(driverService, "validateDriver").mockResolvedValueOnce(false)
     const httpResponse = await sut.confirm({
       body: {
         customer_id: "any_id",

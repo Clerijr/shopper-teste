@@ -3,15 +3,18 @@ import {
   Controller,
   HttpRequest,
   HttpResponse,
-} from "../../protocols/index";
+  DriverService,
+} from "../../protocols";
 import { DriverNotFoundError, InvalidDataError } from "../errors";
 import { badRequest, serverError, ok } from "../helpers";
 
 export class RideController implements Controller {
   private readonly rideService: RideService;
+  private readonly driverService: DriverService;
 
-  constructor(rideService: RideService) {
+  constructor(rideService: RideService, driverService: DriverService) {
     this.rideService = rideService;
+    this.driverService = driverService;
   }
 
   private validateFields = (fields: Array<string>, req: HttpRequest): HttpResponse => {
@@ -48,9 +51,9 @@ export class RideController implements Controller {
     const error = this.validateFields(requiredFields, req);
     if (error) return error;
 
-    const driverExists = await this.rideService.validateDriver(req.body.driver)
+    const driver = await this.driverService.validateDriver(req.body.driver, req.body.distance)
 
-    if(!req.body.driver.id || !req.body.driver.name || !driverExists) {
+    if(!driver) {
       return badRequest(new DriverNotFoundError())
     }
 

@@ -46,13 +46,4 @@ export class RideServiceImpl implements RideService {
       throw new Error(error);
     }
   }
-  async validateDriver(driver: Driver): Promise<boolean> {
-    const driverExists = this.driverRepository.findDriverById(driver.id);
-
-    if (!driverExists) {
-      return false
-    }
-
-    return true;
-  }
 }

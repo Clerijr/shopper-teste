@@ -4,13 +4,15 @@ import { RideController } from "./src/controllers/estimateRide/estimateRide";
 import { RideServiceImpl } from "./src/services/ride";
 import { DriverRepository } from "./src/repositories/driver";
 import { GeolocationServiceImp } from "./src/services/geolocation";
+import { DriverServiceImpl } from "./src/services/driver";
 
 
 
 const geolocationService = new GeolocationServiceImp()
 const driverRepository = new DriverRepository()
 const rideService = new RideServiceImpl(geolocationService, driverRepository)
-const rideController = new RideController(rideService)
+const driverService = new DriverServiceImpl(driverRepository)
+const rideController = new RideController(rideService, driverService)
 
 const app = express();
 const route = Router();
