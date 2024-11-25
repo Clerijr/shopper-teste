@@ -6,9 +6,6 @@ export const makePromiseWithServerError = (): Promise<never> => {
 }
 
 export const makeAvailableRidesByDistance = (): Promise<AvailableRideDetails> => {
-
-
-
     return new Promise(resolve => resolve({
         origin: {
             latitude: -23.5617323,

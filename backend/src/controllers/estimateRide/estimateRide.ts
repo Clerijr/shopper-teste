@@ -13,22 +13,18 @@ export class RideController implements Controller {
     this.rideService = rideService;
   }
 
-  async handle(req: HttpRequest): Promise<HttpResponse> {
+  async estimate(req: HttpRequest): Promise<HttpResponse> {
     try {
       const requiredFields = ["origin", "destination", "customer_id"];
       for (const field of requiredFields) {
         if (!req.body[field]) {
-          return new Promise((resolve) =>
-            resolve(badRequest(`Missing Param: ${field}`))
-          );
+          return badRequest(`Missing Param: ${field}`)
         }
       }
       const { origin, destination } = req.body;
 
       if (origin === destination) {
-        return new Promise((resolve) =>
-          resolve(badRequest("Origin can not be equal to Destination"))
-        );
+        return badRequest("Origin can not be equal to Destination")
       }
 
       const payload = await this.rideService.getAvailableRidesByDistance(
@@ -39,5 +35,9 @@ export class RideController implements Controller {
     } catch (error) {
       return serverError();
     }
+  }
+
+  async confirm(req: HttpRequest): Promise<HttpResponse> {
+    return badRequest(`Missing Param: origin`)
   }
 }
