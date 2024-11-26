@@ -5,7 +5,7 @@ import {
   HttpResponse,
   DriverService,
 } from "../../protocols";
-import { DriverNotFoundError, InvalidDataError } from "../../errors";
+import { InvalidDataError } from "../../errors";
 import { badRequest, serverError, ok, notAcceptable, notFound } from "../helpers";
 
 export class RideController implements Controller {

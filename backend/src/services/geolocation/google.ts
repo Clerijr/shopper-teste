@@ -2,11 +2,6 @@ import { GeolocationStrategy, RouteResponse } from "../../protocols";
 
 export class GoogleRouteStrategy implements GeolocationStrategy {
   async getRoute(origin: string, destination: string): Promise<RouteResponse> {
-    /* 
-    - Do geolocation to get lat long 
-    - with lat long get route 
-    - Return route
-    */
     return new Promise(resolve => resolve({
       "distanceMeters": 432500,
       "duration": "PT5H22M",
