@@ -13,6 +13,7 @@ export interface RideService extends Service {
     destination: string
   ): Promise<AvailableRideDetails>;
   confirmRide(ride: Ride): Promise<void>;
+  getRidesByCustomer(customer_id: string): Promise<Array<Ride>>
 }
 
 export interface DriverService extends Service {

@@ -1,4 +1,4 @@
-import { InvalidDataError, ServerError } from "../errors";
+import { ServerError } from "../errors";
 import { HttpResponse } from "../protocols/types";
 
 export function badRequest(error: Error): HttpResponse {

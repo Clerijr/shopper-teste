@@ -4,18 +4,18 @@ import {
   AvailableRideDetails,
   GeolocationStrategy,
   Ride,
-  Repository,
+  RideRepository,
 } from "../protocols";
 
 export class RideServiceImpl implements RideService {
   private readonly geolocationStrategy: GeolocationStrategy;
   private readonly driverRepository: DriverRepository;
-  private readonly rideRepository: Repository;
+  private readonly rideRepository: RideRepository;
 
   constructor(
     geolocationStrategy: GeolocationStrategy,
     driverRepository: DriverRepository,
-    rideRepository: Repository
+    rideRepository: RideRepository
   ) {
     this.geolocationStrategy = geolocationStrategy;
     this.driverRepository = driverRepository;
@@ -50,5 +50,10 @@ export class RideServiceImpl implements RideService {
 
   async confirmRide(ride: Ride): Promise<void> {
     await this.rideRepository.insert(ride)
+  }
+
+  async getRidesByCustomer(customer_id: string): Promise<Array<Ride>> {
+    const payload = (await this.rideRepository.getRidesByCustomer(customer_id)).sort((a, b) => a.created_at - b.created_at)
+    return payload
   }
 }

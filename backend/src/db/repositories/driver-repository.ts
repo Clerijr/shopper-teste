@@ -1,4 +1,5 @@
 import { Repository, Driver } from "../../protocols";
+import { Collection, Db } from "mongodb";
 
 const fakeDrivers = [
   {
@@ -45,7 +46,14 @@ const fakeDrivers = [
   },
 ];
 
+
 export class DriverRepository implements Repository {
+  private driverCollection: Collection<Driver>
+
+  async initCollection(db: Db) {
+    this.driverCollection = db.collection<Driver>("drivers");
+  }
+
   async insert(payload: any): Promise<void> {
   }
 

@@ -4,9 +4,17 @@ import {
   HttpRequest,
   HttpResponse,
   DriverService,
+  Ride
 } from "../../protocols";
-import { InvalidDataError } from "../../errors";
-import { badRequest, serverError, ok, notAcceptable, notFound } from "../helpers";
+import { InvalidBodyError, InvalidQueryParamsError } from "../../errors";
+import { Request } from "express";
+import {
+  badRequest,
+  serverError,
+  ok,
+  notAcceptable,
+  notFound,
+} from "../helpers";
 
 export class RideController implements Controller {
   private readonly rideService: RideService;
@@ -17,21 +25,23 @@ export class RideController implements Controller {
     this.driverService = driverService;
   }
 
-  private validateFields = (fields: Array<string>, req: HttpRequest): HttpResponse => {
+  private validateFields = (
+    fields: Array<string>,
+    req: HttpRequest
+  ): HttpResponse => {
     for (const field of fields) {
       if (!req.body[field]) {
-        return badRequest(new InvalidDataError());
+        return badRequest(new InvalidBodyError());
       }
     }
 
     if (req.body.origin === req.body.destination) {
-      return badRequest(new InvalidDataError());
+      return badRequest(new InvalidBodyError());
     }
   };
 
   async estimate(req: HttpRequest): Promise<HttpResponse> {
     try {
-    
       const requiredFields = ["origin", "destination", "customer_id"];
       const error = this.validateFields(requiredFields, req);
       if (error) return error;
@@ -48,23 +58,48 @@ export class RideController implements Controller {
 
   async confirm(req: HttpRequest): Promise<HttpResponse> {
     const requiredFields = ["origin", "destination", "customer_id", "driver"];
-    const error = this.validateFields(requiredFields, req);
-    if (error) return error;
+    try {
+      const error = this.validateFields(requiredFields, req);
+      if (error) return error;
 
-    const driverError = await this.driverService.validateDriver(req.body.driver, req.body.distance)
+      const driverError = await this.driverService.validateDriver(
+        req.body.driver,
+        req.body.distance
+      );
 
-    if(driverError?.name === "DRIVER_NOT_FOUND") {
-      return notFound(driverError)
+      if (driverError?.name === "DRIVER_NOT_FOUND") {
+        return notFound(driverError);
+      }
+
+      if (driverError?.name === "INVALID_DISTANCE") {
+        return notAcceptable(driverError);
+      }
+
+      await this.rideService.confirmRide(req.body);
+
+      return ok({
+        success: true,
+      });
+    } catch (error) {
+      return serverError();
+    }
+  }
+
+  async getRides(req: Request): Promise<HttpResponse> {
+    const { customer_id } = req.params;
+    const { driver_id } = req.query;
+    let payload: Array<Ride>
+
+    if (!customer_id) {
+      return badRequest(new InvalidQueryParamsError());
     }
 
-    if(driverError?.name === "INVALID_DISTANCE") {
-      return notAcceptable(driverError)
+    payload = await this.rideService.getRidesByCustomer(customer_id)
+
+    if(driver_id) {
+      return ok(payload.filter(ride => ride.driver.id === Number(driver_id)))
     }
 
-    await this.rideService.confirmRide(req.body)
-
-    return ok({
-      success: true
-    });
+    return ok(payload)
   }
 }

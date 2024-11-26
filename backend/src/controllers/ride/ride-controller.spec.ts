@@ -1,29 +1,38 @@
-import {
-  RideService,
-  DriverService
-} from "../../protocols";
+import { RideService, DriverService } from "../../protocols";
 import { badRequest, notAcceptable, notFound } from "../helpers";
 import { RideController } from "./ride-controller";
-import { DriverNotFoundError, InvalidDataError, InvalidDistanceError, ServerError } from "../../errors";
-import { makeEstimateRequest, makeConfirmRequest, makeRideServiceStub, makeDriverServiceStub } from "../../factories/mocks";
+import {
+  DriverNotFoundError,
+  InvalidBodyError,
+  InvalidQueryParamsError,
+  InvalidDistanceError,
+  ServerError,
+} from "../../errors";
+import {
+  makeEstimateRequest,
+  makeConfirmRequest,
+  makeRideServiceStub,
+  makeDriverServiceStub,
+} from "../../factories/mocks";
+import request from "supertest";
+import express from "express";
+import { initApp } from "../../config/app";
 
 type SutType = {
   sut: RideController;
   rideService: RideService;
-  driverService: DriverService
+  driverService: DriverService;
 };
-
-
 
 const makeSut = (): SutType => {
   const rideService = makeRideServiceStub();
-  const driverService = makeDriverServiceStub()
+  const driverService = makeDriverServiceStub();
   const sut = new RideController(rideService, driverService);
 
   return {
     sut,
     rideService,
-    driverService
+    driverService,
   };
 };
 
@@ -60,7 +69,7 @@ describe("Ride Controller /estimate", () => {
         destination: "any_destination",
       },
     });
-    expect(httpResponse).toEqual(badRequest(new InvalidDataError()));
+    expect(httpResponse).toEqual(badRequest(new InvalidBodyError()));
   });
 
   test("Should return 400 if destination is not provided", async () => {
@@ -71,7 +80,7 @@ describe("Ride Controller /estimate", () => {
         origin: "any_origin",
       },
     });
-    expect(httpResponse).toEqual(badRequest(new InvalidDataError()));
+    expect(httpResponse).toEqual(badRequest(new InvalidBodyError()));
   });
 
   test("Should return 400 if customer_id is not provided", async () => {
@@ -82,7 +91,7 @@ describe("Ride Controller /estimate", () => {
         destination: "any_destination",
       },
     });
-    expect(httpResponse).toEqual(badRequest(new InvalidDataError()));
+    expect(httpResponse).toEqual(badRequest(new InvalidBodyError()));
   });
 
   test("Should return 400 if customer_id is empty", async () => {
@@ -94,7 +103,7 @@ describe("Ride Controller /estimate", () => {
         destination: "any_destination",
       },
     });
-    expect(httpResponse).toEqual(badRequest(new InvalidDataError()));
+    expect(httpResponse).toEqual(badRequest(new InvalidBodyError()));
   });
 
   test("Should return 400 if destination is equal to origin", async () => {
@@ -106,7 +115,7 @@ describe("Ride Controller /estimate", () => {
         destination: "same_address",
       },
     });
-    expect(httpResponse).toEqual(badRequest(new InvalidDataError()));
+    expect(httpResponse).toEqual(badRequest(new InvalidBodyError()));
   });
 
   test("Should return 500 if rideService throws", async () => {
@@ -123,12 +132,12 @@ describe("Ride Controller /estimate", () => {
 });
 
 describe("Ride Controller /confirm", () => {
-  test('Should return 200 if correct data is provided', async () => { 
-    const { sut }  = makeSut()
-    const httpResponse = await sut.confirm(makeConfirmRequest())
+  test("Should return 200 if correct data is provided", async () => {
+    const { sut } = makeSut();
+    const httpResponse = await sut.confirm(makeConfirmRequest());
     expect(httpResponse.statusCode).toBe(200);
     expect(httpResponse.body).toHaveProperty("success");
-   })
+  });
 
   test("Should return 400 if origin is empty", async () => {
     const { sut } = makeSut();
@@ -145,7 +154,7 @@ describe("Ride Controller /confirm", () => {
         value: 10,
       },
     });
-    expect(httpResponse).toEqual(badRequest(new InvalidDataError()));
+    expect(httpResponse).toEqual(badRequest(new InvalidBodyError()));
   });
 
   test("Should return 400 if destination is empty", async () => {
@@ -163,7 +172,7 @@ describe("Ride Controller /confirm", () => {
         value: 10,
       },
     });
-    expect(httpResponse).toEqual(badRequest(new InvalidDataError()));
+    expect(httpResponse).toEqual(badRequest(new InvalidBodyError()));
   });
 
   test("Should return 400 if customer_id is empty", async () => {
@@ -181,7 +190,7 @@ describe("Ride Controller /confirm", () => {
         value: 10,
       },
     });
-    expect(httpResponse).toEqual(badRequest(new InvalidDataError()));
+    expect(httpResponse).toEqual(badRequest(new InvalidBodyError()));
   });
 
   test("Should return 400 if driver is empty", async () => {
@@ -196,7 +205,7 @@ describe("Ride Controller /confirm", () => {
         value: 10,
       },
     });
-    expect(httpResponse).toEqual(badRequest(new InvalidDataError()));
+    expect(httpResponse).toEqual(badRequest(new InvalidBodyError()));
   });
 
   test("Should return 400 if destination is equal to origin", async () => {
@@ -215,12 +224,14 @@ describe("Ride Controller /confirm", () => {
         value: 10,
       },
     });
-    expect(httpResponse).toEqual(badRequest(new InvalidDataError()));
+    expect(httpResponse).toEqual(badRequest(new InvalidBodyError()));
   });
 
   test("Should return 404 if driver is not found", async () => {
     const { sut, driverService } = makeSut();
-    jest.spyOn(driverService, "validateDriver").mockResolvedValueOnce(new DriverNotFoundError())
+    jest
+      .spyOn(driverService, "validateDriver")
+      .mockResolvedValueOnce(new DriverNotFoundError());
     const httpResponse = await sut.confirm(makeConfirmRequest());
     expect(httpResponse.statusCode).toBe(404);
     expect(httpResponse).toEqual(notFound(new DriverNotFoundError()));
@@ -228,9 +239,23 @@ describe("Ride Controller /confirm", () => {
 
   test("Should return 406 if distance is invalid for provided driver", async () => {
     const { sut, driverService } = makeSut();
-    jest.spyOn(driverService, "validateDriver").mockResolvedValueOnce(new InvalidDistanceError())
+    jest
+      .spyOn(driverService, "validateDriver")
+      .mockResolvedValueOnce(new InvalidDistanceError());
     const httpResponse = await sut.confirm(makeConfirmRequest());
     expect(httpResponse.statusCode).toBe(406);
     expect(httpResponse).toEqual(notAcceptable(new InvalidDistanceError()));
   });
 });
+
+/* describe("Ride Controller /getRides", () => {
+  test("Should return 400 if customer_id is not provided", async () => {
+    const { sut } = makeSut()
+    const app = initApp(sut);
+    const httpResponse = await request(app).get(
+      "/ride/1?driver_id=2"
+    );
+    expect(httpResponse.statusCode).toBe(400);
+    expect(httpResponse).toEqual(badRequest(new InvalidQueryParamsError()));
+  });
+}); */

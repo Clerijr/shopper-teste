@@ -1,3 +1,5 @@
+import { ObjectId } from "mongodb";
+
 export type HttpResponse = {
   statusCode: number;
   body?: any;
@@ -51,6 +53,7 @@ export type RouteResponse = {
 };
 
 export type Ride = {
+  _id?: ObjectId
   customer_id: string;
   origin: string;
   destination: string;
@@ -61,5 +64,10 @@ export type Ride = {
     name: string;
   };
   value: number;
+  created_at?: number 
 };
 
+export type IdsToGetRide = { 
+  customer_id: string; 
+  driver_id: string 
+};

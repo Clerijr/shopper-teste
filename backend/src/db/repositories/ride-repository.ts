@@ -1,21 +1,24 @@
-import { Ride, Repository } from "../../protocols";
-import { Collection, Db } from "mongodb";
+import { Ride, RideRepository } from "../../protocols";
+import { Collection, Db, FindCursor } from "mongodb";
 
-let rideCollection: Collection<Ride>;
 
-export class RideRepository implements Repository {
+export class RideRepositoryImpl implements RideRepository {
+  private rideCollection: Collection<Ride>;
+
   async initCollection(db: Db) {
-    rideCollection = db.collection<Ride>("rides");
+    this.rideCollection = db.collection<Ride>("rides");
   }
 
   async insert(ride: Ride): Promise<void> {
     try {
-      await rideCollection.insertOne(ride);
+      ride['created_at'] = Date.now()
+      await this.rideCollection.insertOne(ride);
     } catch (error) {
       throw new Error(error);
     }
   }
-  /* async getAllRides() {
-    return await rideCollection.find().toArray();
-  } */
+  
+  async getRidesByCustomer(customer_id: string): Promise<Array<Ride>> {
+    return this.rideCollection.find({customer_id}).toArray()
+  }
 }

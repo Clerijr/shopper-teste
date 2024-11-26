@@ -1,7 +1,8 @@
+import { Db, FindCursor } from "mongodb";
 import { ServerError } from "../errors";
 import {
   AvailableRideDetails,
-  Repository,
+  RideRepository,
   DriverRepository,
   GeolocationStrategy,
   RouteResponse,
@@ -10,14 +11,15 @@ import {
   HttpRequest,
   RideService,
   DriverService,
-  Ride
+  Ride,
 } from "../protocols";
 
 export const makePromiseWithServerError = (): Promise<never> => {
   return new Promise((resolve, reject) => reject(new ServerError()));
 };
 
-export const makeAvailableRidesByDistance = (): Promise<AvailableRideDetails> => {
+export const makeAvailableRidesByDistance =
+  (): Promise<AvailableRideDetails> => {
     return new Promise((resolve) =>
       resolve({
         origin: {
@@ -53,18 +55,22 @@ export const makeAvailableRidesByDistance = (): Promise<AvailableRideDetails> =>
     );
   };
 
-export const makeRideRepositoryStub = (): Repository => {
-  class RideRepositoryStub implements Repository {
+export const makeRideRepositoryStub = (): RideRepository => {
+  class RideRepositoryImplStub implements RideRepository {
+    async initCollection(db: Db): Promise<void> {}
     async insert(payload: any): Promise<void> {}
+    async getRidesByCustomer(customer_id: string): Promise<Array<Ride>> {
+      return;
+    }
   }
 
-  return new RideRepositoryStub();
+  return new RideRepositoryImplStub();
 };
 
 export const makeDriverRepositoryStub = (): DriverRepository => {
   class DriverRepositoryStub implements DriverRepository {
-    async insert(payload: any): Promise<void> {
-    }
+    async initCollection(db: Db): Promise<void> {}
+    async insert(payload: any): Promise<void> {}
     async getDriversByDistance(distance: number): Promise<Array<Driver>> {
       return new Promise((resolve) => resolve([]));
     }
@@ -164,17 +170,18 @@ export const makeRideServiceStub = (): RideService => {
     ): Promise<AvailableRideDetails> {
       return makeAvailableRidesByDistance();
     }
-    async confirmRide(ride: Ride): Promise<void> {
+    async confirmRide(ride: Ride): Promise<void> {}
+    async getRidesByCustomer(customer_id: string): Promise<Array<Ride>> {
+      return
     }
   }
   return new RideServiceStub();
-
 };
 
 export const makeDriverServiceStub = (): DriverService => {
   class DriverServiceStub implements DriverService {
     async validateDriver(driver: Driver): Promise<Error> {
-      return
+      return;
     }
   }
   return new DriverServiceStub();

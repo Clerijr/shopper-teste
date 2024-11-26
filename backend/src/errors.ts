@@ -19,9 +19,16 @@ export class ServerError extends Error {
     }
 }
 
-export class InvalidDataError extends Error {
+export class InvalidBodyError extends Error {
     constructor(){
         super("Os dados fornecidos no corpo da requisição são inválidos")
+        this.name = "INVALID_DATA"    
+    }
+}
+
+export class InvalidQueryParamsError extends Error {
+    constructor(){
+        super("Os parametros fornecidos na uri são inválidos")
         this.name = "INVALID_DATA"    
     }
 }
