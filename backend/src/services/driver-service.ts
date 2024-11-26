@@ -19,6 +19,9 @@ export class DriverServiceImpl implements DriverService {
     if (distanceKm < driverData.minimum_distance) {
       return new InvalidDistanceError();
     }
-    
+  }
+
+  async getDriver(driver_id: number): Promise<Driver> {
+    return await this.driverRepository.findDriverById(driver_id);
   }
 }

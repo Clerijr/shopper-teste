@@ -183,6 +183,9 @@ export const makeDriverServiceStub = (): DriverService => {
     async validateDriver(driver: Driver): Promise<Error> {
       return;
     }
+    async getDriver(driver_id: number): Promise<Driver> {
+      return
+    }
   }
   return new DriverServiceStub();
 };

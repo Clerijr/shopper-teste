@@ -4,9 +4,16 @@ import {
   HttpRequest,
   HttpResponse,
   DriverService,
-  Ride
+  Ride,
+  Driver
 } from "../../protocols";
-import { InvalidBodyError, InvalidQueryParamsError } from "../../errors";
+import {
+  DriverNotFoundError,
+  InvalidBodyError,
+  InvalidDriverError,
+  InvalidQueryParamsError,
+  RidesNotFoundError,
+} from "../../errors";
 import { Request } from "express";
 import {
   badRequest,
@@ -88,18 +95,24 @@ export class RideController implements Controller {
   async getRides(req: Request): Promise<HttpResponse> {
     const { customer_id } = req.params;
     const { driver_id } = req.query;
-    let payload: Array<Ride>
-
+    let driver: Driver;
+    let payload: Array<Ride>;
     if (!customer_id) {
       return badRequest(new InvalidQueryParamsError());
     }
 
-    payload = await this.rideService.getRidesByCustomer(customer_id)
-
-    if(driver_id) {
-      return ok(payload.filter(ride => ride.driver.id === Number(driver_id)))
+    payload = await this.rideService.getRidesByCustomer(customer_id);
+    if(payload.length === 0) {
+      return notFound(new RidesNotFoundError())
     }
 
-    return ok(payload)
+    if (driver_id) {
+      driver = await this.driverService.getDriver(Number(driver_id));
+      if (!driver) {
+        return badRequest(new InvalidDriverError());
+      }
+      payload.filter((ride) => ride.driver.id === Number(driver_id));
+    }
+    return ok(payload);
   }
 }

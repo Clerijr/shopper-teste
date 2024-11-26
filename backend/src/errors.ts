@@ -33,10 +33,10 @@ export class InvalidQueryParamsError extends Error {
     }
 }
 
-export class DriverNotFoundError extends Error {
+export class InvalidDriverError extends Error {
     constructor(){
-        super("Motorista não encontrado")
-        this.name = "DRIVER_NOT_FOUND"    
+        super("O motorista informado não foi encontrado")
+        this.name = "INVALID_DRIVER"    
     }
 }
 
@@ -47,6 +47,21 @@ export class InvalidDistanceError extends Error {
          
     }
 }
+
+export class DriverNotFoundError extends Error {
+    constructor(){
+        super("Motorista não encontrado")
+        this.name = "DRIVER_NOT_FOUND"    
+    }
+}
+
+export class RidesNotFoundError extends Error {
+    constructor(){
+        super("Nenhum registro encontrado")
+        this.name = "NO_RIDES_FOUND"    
+    }
+}
+
 
 export class InvalidAddressForGeocodingError extends Error {
     constructor(address: string){
