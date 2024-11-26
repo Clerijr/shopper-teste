@@ -36,7 +36,8 @@ export class DriverNotFoundError extends Error {
 export class InvalidDistanceError extends Error {
     constructor(){
         super("Quilometragem inválida para o motorista")
-        this.name = "INVALID_DISTANCE"    
+        this.name = "INVALID_DISTANCE"   
+         
     }
 }
 

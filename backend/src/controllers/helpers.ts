@@ -11,6 +11,26 @@ export function badRequest(error: Error): HttpResponse {
   };
 }
 
+export function notFound(error: Error): HttpResponse {
+  return {
+    statusCode: 404,
+    body: {
+      error_code: error.name,
+      error_description: error.message,
+    },
+  };
+}
+
+export function notAcceptable(error: Error): HttpResponse {
+  return {
+    statusCode: 406,
+    body: {
+      error_code: error.name,
+      error_description: error.message,
+    },
+  };
+}
+
 export function serverError(): HttpResponse {
   return {
     statusCode: 500,

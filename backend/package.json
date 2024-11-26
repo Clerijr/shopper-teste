@@ -13,7 +13,6 @@
   "author": "Clerivaldo Junior",
   "license": "MIT",
   "devDependencies": {
-    "@shelf/jest-mongodb": "^4.3.2",
     "@types/express": "^5.0.0",
     "@types/jest": "^29.5.14",
     "@types/mongodb": "^4.0.7",

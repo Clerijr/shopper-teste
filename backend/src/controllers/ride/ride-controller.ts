@@ -6,7 +6,7 @@ import {
   DriverService,
 } from "../../protocols";
 import { DriverNotFoundError, InvalidDataError } from "../../errors";
-import { badRequest, serverError, ok } from "../helpers";
+import { badRequest, serverError, ok, notAcceptable, notFound } from "../helpers";
 
 export class RideController implements Controller {
   private readonly rideService: RideService;
@@ -53,8 +53,12 @@ export class RideController implements Controller {
 
     const driverError = await this.driverService.validateDriver(req.body.driver, req.body.distance)
 
-    if(driverError) {
-      return badRequest(driverError)
+    if(driverError?.name === "DRIVER_NOT_FOUND") {
+      return notFound(driverError)
+    }
+
+    if(driverError?.name === "INVALID_DISTANCE") {
+      return notAcceptable(driverError)
     }
 
     await this.rideService.confirmRide(req.body)

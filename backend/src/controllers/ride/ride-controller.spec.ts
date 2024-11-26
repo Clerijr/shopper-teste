@@ -2,7 +2,7 @@ import {
   RideService,
   DriverService
 } from "../../protocols";
-import { badRequest } from "../helpers";
+import { badRequest, notAcceptable, notFound } from "../helpers";
 import { RideController } from "./ride-controller";
 import { DriverNotFoundError, InvalidDataError, InvalidDistanceError, ServerError } from "../../errors";
 import { makeEstimateRequest, makeConfirmRequest, makeRideServiceStub, makeDriverServiceStub } from "../../factories/mocks";
@@ -222,13 +222,15 @@ describe("Ride Controller /confirm", () => {
     const { sut, driverService } = makeSut();
     jest.spyOn(driverService, "validateDriver").mockResolvedValueOnce(new DriverNotFoundError())
     const httpResponse = await sut.confirm(makeConfirmRequest());
-    expect(httpResponse).toEqual(badRequest(new DriverNotFoundError()));
+    expect(httpResponse.statusCode).toBe(404);
+    expect(httpResponse).toEqual(notFound(new DriverNotFoundError()));
   });
 
   test("Should return 406 if distance is invalid for provided driver", async () => {
     const { sut, driverService } = makeSut();
     jest.spyOn(driverService, "validateDriver").mockResolvedValueOnce(new InvalidDistanceError())
     const httpResponse = await sut.confirm(makeConfirmRequest());
-    expect(httpResponse).toEqual(badRequest(new InvalidDistanceError()));
+    expect(httpResponse.statusCode).toBe(406);
+    expect(httpResponse).toEqual(notAcceptable(new InvalidDistanceError()));
   });
 });

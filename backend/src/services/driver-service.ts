@@ -19,7 +19,6 @@ export class DriverServiceImpl implements DriverService {
     if (distanceKm < driverData.minimum_distance) {
       return new InvalidDistanceError();
     }
-
-    return
+    
   }
 }
