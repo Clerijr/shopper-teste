@@ -111,7 +111,10 @@ export class RideController implements Controller {
       if (!driver) {
         return badRequest(new InvalidDriverError());
       }
-      payload.filter((ride) => ride.driver.id === Number(driver_id));
+      payload = payload.filter((ride) => ride.driver.id === Number(driver_id));
+      if(payload.length === 0) {
+        return notFound(new RidesNotFoundError())
+      }
     }
     return ok(payload);
   }

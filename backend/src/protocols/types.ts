@@ -19,7 +19,9 @@ export type Driver = {
     comment: string;
   };
   value: number;
-  minimum_distance: number;
+  minimum_distance: number; 
+  created_at?: number 
+
 };
 
 export type AvailableRideDetails = {

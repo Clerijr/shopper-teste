@@ -1,4 +1,4 @@
-import { Db, FindCursor } from "mongodb";
+import { Db } from "mongodb";
 import { ServerError } from "../errors";
 import {
   AvailableRideDetails,

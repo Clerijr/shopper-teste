@@ -46,38 +46,52 @@ const fakeDrivers = [
   },
 ];
 
-
 export class DriverRepository implements Repository {
-  private driverCollection: Collection<Driver>
+  private driverCollection: Collection<Driver>;
 
   async initCollection(db: Db) {
     this.driverCollection = db.collection<Driver>("drivers");
+    const driverDocs = await this.driverCollection.countDocuments();
+    if (driverDocs === 0) {
+      await this.seedCollection();
+      console.log("Dados de Driver criados");
+    }
   }
 
-  async insert(payload: any): Promise<void> {
+  async insert(driver: Driver): Promise<void> {
+    try {
+      driver["created_at"] = Date.now();
+      await this.driverCollection.insertOne(driver);
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
+
+  private async seedCollection(): Promise<void> {
+    try {
+      this.driverCollection.insertMany(fakeDrivers);
+    } catch (error) {
+      throw new Error(error);
+    }
   }
 
   async getDriversByDistance(distance: number): Promise<Array<Driver>> {
     const ride_distance = distance / 1000;
-    const driver_payload = fakeDrivers.reduce((arr, driver) => {
-      if (ride_distance >= driver.minimum_distance) {
-        arr.push({
-          id: driver.id,
-          name: driver.name,
-          description: driver.description,
-          vehicle: driver.vehicle,
-          review: driver.review,
-          value: driver.value * ride_distance,
-        });
-      }
-      return arr;
-    }, []);
+    const drivers = await this.driverCollection
+      .find({
+        minimum_distance: { $gte: ride_distance },
+      })
+      .toArray();
+    drivers.map((driver) => {
+      driver["value"] = driver.value * ride_distance;
+      return driver;
+    });
 
-    driver_payload.sort((a, b) => a.value - b.value);
+    drivers.sort((a, b) => a.value - b.value);
 
-    return new Promise((resolve) => resolve(driver_payload));
+    return new Promise((resolve) => resolve(drivers));
   }
   async findDriverById(id: number): Promise<Driver> {
-    return fakeDrivers.find(driver => driver.id === id)
+    return await this.driverCollection.findOne({ id: id });
   }
 }

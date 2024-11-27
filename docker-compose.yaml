@@ -4,8 +4,12 @@ services:
       dockerfile: ./backend/Dockerfile
     ports:
       - "8080:8080"
+    depends_on:
+      - mongodb
     env_file:
       - ./backend/.env
+    environment:
+      MONGO_URI: mongodb://mongo:27017/shopper_teste
     command: npm run start
   frontend:
     build:
@@ -13,3 +17,13 @@ services:
       dockerfile: ./frontend/Dockerfile
     ports:
       - "8181:8181"
+  mongodb:
+    image: mongo
+    container_name: mongodb_shopper
+    ports:
+      - "27017:27017" # Expose MongoDB's default port
+    volumes:
+      - mongo_data:/data/db # Persist MongoDB data on the host
+
+volumes:
+  mongo_data:
